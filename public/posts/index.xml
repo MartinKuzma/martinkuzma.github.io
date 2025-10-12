@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Blowfish</title>
-    <link>http://localhost:1313/posts/</link>
-    <description>Recent content in Posts on Blowfish</description>
+    <title>Posts on Martin&#39;s inner Cosmos</title>
+    <link>http://localhost:37927/posts/</link>
+    <description>Recent content in Posts on Martin&#39;s inner Cosmos</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>© 2025 </copyright>
-    <lastBuildDate>Sat, 11 Oct 2025 22:09:06 +0200</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 11 Oct 2025 22:09:06 +0200</lastBuildDate><atom:link href="http://localhost:37927/posts/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>Design Shenanigans #1</title>
-      <link>http://localhost:1313/posts/test-post/</link>
+      <title>Designing the worst GRPC API ever</title>
+      <link>http://localhost:37927/posts/test-post/</link>
       <pubDate>Sat, 11 Oct 2025 22:09:06 +0200</pubDate>
       
-      <guid>http://localhost:1313/posts/test-post/</guid>
+      <guid>http://localhost:37927/posts/test-post/</guid>
       <description></description>
       
     </item>

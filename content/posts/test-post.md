@@ -9,6 +9,7 @@ We always want to design the best API possible, overcome any hurdles, split ever
 Life isn't fair, life isn't easy. Nothing will work out as planned, so let's just go ahead and achieve the peak of bad API design. It will happen anyway, so why not embrace it?
 
 ## What defines a bad API?
+Here are some common pitfalls:
 - No single responsibility principle
 - No versioning
 - No documentation or too much of low quality documentation
@@ -16,7 +17,6 @@ Life isn't fair, life isn't easy. Nothing will work out as planned, so let's jus
 - Overcomplicated data structures
 - Incorrect use of error codes
 - Misleading comments
-- and more...
 
 I will try to cover all of these points in this post. Hope you are ready...
 
@@ -210,4 +210,9 @@ During my first iteration I removed:
 ## Iteration #2: Making the contract looser
 We don't want to be constrained by a strict contract. Let's make everything as loose as possible. We can do this by:
 - Using `string` instead of enums
-- Using `any` for payloads
+- Using `any` or `oneof` for payloads
+
+
+## Iteration #3: Overcomplicating data structures
+
+- Using `Struct` instead of `any`
