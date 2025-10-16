@@ -23,6 +23,8 @@ I will try to cover all of these points in this post. Hope you are ready...
 ## Starting point with a simple generic API
 Let's assume we have application that emits events and has tasks that needs to execute. We want to expose a GRPC API for pushing events and managing tasks. Since there could be thousands of events per second, we want to support batch processing for pushing events. We also want to be able to tell the client which events were successfully processed and which failed.
 
+For sake of brevity I omitted field validation extensions.
+
 Don't worry, it will get much smaller once we remove all the (un)necessary stuff.
 
 ### Event API
@@ -31,15 +33,17 @@ Simple API for pushing events in batch. I even added HTTP annotations for REST c
 syntax = "proto3";
 
 package example.v1;
-go_package = "examplepb/v1";
+option go_package = "example/v1";
 
+import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
 service ApplicationEventService {
     // Batch push events to the backend for further processing.
     // Each event will be processed independently, and the response will indicate
     // which events were successfully processed and which failed.
-    // Any request containg more than the allowed maximum (see GetMaxBatchSize) will be rejected with INVALID_ARGUMENT.
+    // Any request containing more than the allowed maximum (see GetMaxBatchSize) will be rejected with INVALID_ARGUMENT.
+    // Requires access token with application.event.write scope.
     rpc PushEvents (PushEventsRequest) returns (PushEventsResponse) {
         option (google.api.http) = {
             post: "/v1/events:push"
@@ -50,7 +54,8 @@ service ApplicationEventService {
     // Retrieving how many events can be pushed in a single request.
     // This allows clients to adjust their batch sizes accordingly.
     // We want to keep this flexible so that we can change it in the future without breaking clients.
-    rpc GetMaxBatchSize (google.protobuf.Empty) returns (MaxBatchSizeResponse) {
+    // Requires access token with application.event.read scope.
+    rpc GetMaxBatchSize (GetMaxBatchSizeRequest) returns (MaxBatchSizeResponse) {
         option (google.api.http) = {
             get: "/v1/events:maxBatchSize"
         };
@@ -64,6 +69,9 @@ message PushEventsRequest {
 
 message PushEventsResponse {
     repeated EventResult results = 1;
+}
+
+message GetMaxBatchSizeRequest {
 }
 
 message MaxBatchSizeResponse {
@@ -84,9 +92,14 @@ message Event {
 
     oneof payload {
         AppError app_error = 4;
-        AppTelemetry app_telemetry = 5;
+        // AppTelemetry app_telemetry = 5;
         // and so on...
     }
+}
+
+message AppError {
+    string error_code = 1; // Application-specific error code
+    string message = 2; // Human-readable error message
 }
 
 enum EventResultStatus {
@@ -110,13 +123,18 @@ This portion of the API allows workers to fetch tasks. Any client can have multi
 syntax = "proto3";
 
 package example.v1;
-go_package = "examplepb/v1";
+option go_package = "example/v1";
 
+import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
 
-service TaskService {
+
+
+service TaskAssignerService {
     // Assign a task to a worker based on its capabilities.
     // The server will match the worker's capabilities with task requirements.
+    // Requires access token with task.write scope.
     rpc AssignTask (AssignTaskRequest) returns (AssignTaskResponse) {
         option (google.api.http) = {
             post: "/v1/tasks:assign"
@@ -125,29 +143,45 @@ service TaskService {
     }
     // Acknowledge that a task has been received and is being processed.
     // This prevents the task from being reassigned to another worker.
+    // Requires access token with task.write scope.
     rpc AcknowledgeTask (AcknowledgeTaskRequest) returns (AcknowledgeTaskResponse) {
         option (google.api.http) = {
-            post: "/v1/tasks/{task_id}:acknowledge"
+            post: "/v1/tasks/{task_uuid}:acknowledge"
             body: "*"
         };
     }
 
     // Complete a task and report the result.
     // The result can indicate success or failure, along with any relevant details.
+    // Requires access token with task.write scope.
     rpc CompleteTask (CompleteTaskRequest) returns (CompleteTaskResponse) {
         option (google.api.http) = {
-            post: "/v1/tasks/{task_id}:complete"
+            post: "/v1/tasks/{task_uuid}:complete"
             body: "*"
         };
     }
 
     // Reject a task if the worker cannot process it. The task will be made available for reassignment.
+    // Requires access token with task.write scope.
     rpc RejectTask (RejectTaskRequest) returns (RejectTaskResponse) {
         option (google.api.http) = {
-            post: "/v1/tasks/{task_id}:reject"
+            post: "/v1/tasks/{task_uuid}:reject"
             body: "*"
         };
     }
+}
+
+message Task {
+    string task_uuid = 1; // Unique identifier for the task
+    string description = 2; // Human-readable description of the task
+    repeated WorkerCapability required_capabilities = 3; // Capabilities required to perform the task
+    google.protobuf.Timestamp created_time = 4; // Time when the task was created
+    google.protobuf.Any details = 5; // Additional task-specific details
+}
+
+message TaskResult {
+    bool success = 1; // Indicates if the task was completed successfully
+    string details = 2; // Additional details about the task result
 }
 
 enum WorkerCapability {
@@ -200,19 +234,143 @@ message RejectTaskResponse {
 During my first iteration I removed:
 - REST support (via HTTP annotations) - why bother when there won't be any browser clients, right? 
 - Helpful comments - let's make implementers make up their own assumptions about the inner workings of our API.
-- Versioning - peak design will never change.
+- Versioning - peak design will never have to change.
+- Language specific options like `go_package` - let others deal with it!
 
+### Event API
+```proto
+syntax = "proto3";
+
+package example;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service ApplicationEventService {
+    rpc PushEvents (PushEventsRequest) returns (PushEventsResponse) {}
+    rpc GetMaxBatchSize (GetMaxBatchSizeRequest) returns (MaxBatchSizeResponse) {}
+}
+
+message PushEventsRequest {
+    repeated Event events = 1;
+}
+
+message PushEventsResponse {
+    repeated EventResult results = 1;
+}
+
+message GetMaxBatchSizeRequest {
+}
+
+message MaxBatchSizeResponse {
+    uint32 max_batch_size = 1; 
+}
+
+message Event {
+    string uuid = 1;
+    google.protobuf.Timestamp create_time = 2;
+    map<string, string> metadata = 3;
+
+    oneof payload {
+        AppError app_error = 4;
+        // AppTelemetry app_telemetry = 5;
+        // and so on...
+    }
+}
+
+message AppError {
+    string error_code = 1;
+    string message = 2;
+}
+
+enum EventResultStatus {
+    EVENT_STATUS_UNSPECIFIED = 0;
+    EVENT_STATUS_SUCCESS = 1;
+    EVENT_STATUS_TRANSIENT_FAILURE = 2;
+    EVENT_STATUS_PERMANENT_FAILURE = 3;
+}
+
+message EventResult {
+    string event_uuid = 1;
+    EventResultStatus status = 2;
+    // Additional context about the result, e.g., error details.
+    string context_message = 3; 
+}
+```
 ### Task API
 ```proto
+syntax = "proto3";
 
+package example;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+
+service TaskAssignerService {
+    rpc AssignTask (AssignTaskRequest) returns (AssignTaskResponse) {}
+    rpc AcknowledgeTask (AcknowledgeTaskRequest) returns (AcknowledgeTaskResponse) {}
+    rpc CompleteTask (CompleteTaskRequest) returns (CompleteTaskResponse) {}
+    rpc RejectTask (RejectTaskRequest) returns (RejectTaskResponse) {}
+}
+
+message Task {
+    string task_uuid = 1;
+    string description = 2; 
+    repeated WorkerCapability required_capabilities = 3;
+    google.protobuf.Timestamp created_time = 4; 
+    google.protobuf.Any details = 5; 
+}
+
+message TaskResult {
+    bool success = 1;
+    string details = 2;
+}
+
+enum WorkerCapability {
+    WORKER_CAPABILITY_UNSPECIFIED = 0;
+    WORKER_CAPABILITY_IMAGE_PROCESSING = 1;
+    WORKER_CAPABILITY_DATA_ANALYSIS = 2;
+    WORKER_CAPABILITY_REPORT_GENERATION = 3;
+}
+
+message AssignTaskRequest {
+    repeated WorkerCapability capabilities = 1;
+}
+
+message AssignTaskResponse {
+    Task task = 1; 
+    google.protobuf.Timestamp lease_deadline = 2; 
+}
+
+message AcknowledgeTaskRequest {
+    string uuid = 1;
+}
+
+message AcknowledgeTaskResponse {
+}
+
+message CompleteTaskRequest {
+    string task_uuid = 1; 
+    TaskResult result = 2;
+}
+
+message CompleteTaskResponse {
+}
+
+message RejectTaskRequest {
+    string task_id = 1;
+}
+
+message RejectTaskResponse {
+}
 ```
 
 ## Iteration #2: Making the contract looser
-We don't want to be constrained by a strict contract. Let's make everything as loose as possible. We can do this by:
+We don't want to be constrained by a strict contract. Contracts are for loosers that don't magicaly know all the secret values and behaviours. We can do this by:
 - Using `string` instead of enums
-- Using `any` or `oneof` for payloads
+- Using `any` instead of `one_of`
 
 
 ## Iteration #3: Overcomplicating data structures
-
 - Using `Struct` instead of `any`
