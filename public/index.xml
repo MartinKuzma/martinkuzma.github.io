@@ -2,22 +2,32 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Martin&#39;s inner Cosmos</title>
-    <link>http://localhost:1313/</link>
+    <link>https://example.org/</link>
     <description>Recent content on Martin&#39;s inner Cosmos</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en</language>
-    <copyright>© 2025 </copyright>
-    <lastBuildDate>Sat, 11 Oct 2025 22:09:06 +0200</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Fri, 17 Oct 2025 22:09:06 +0200</lastBuildDate>
+    <atom:link href="https://example.org/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Designing the worst GRPC API ever</title>
-      <link>http://localhost:1313/posts/test-post/</link>
-      <pubDate>Sat, 11 Oct 2025 22:09:06 +0200</pubDate>
-      
-      <guid>http://localhost:1313/posts/test-post/</guid>
-      <description></description>
-      
+      <link>https://example.org/posts/01-worst-grpc-api/</link>
+      <pubDate>Fri, 17 Oct 2025 22:09:06 +0200</pubDate>
+      <guid>https://example.org/posts/01-worst-grpc-api/</guid>
+      <description>&lt;h2 id=&#34;why-though&#34;&gt;&#xA;  Why, though?&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#why-though&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;We always want to design the best API possible, overcome any hurdles, split everything into neat little boxes, make sure everything is as reusable as possible, and design everything so decoupled that nothing will ever need to change and if it does, nothing will ever break. GRPC is great for designing APIs in advance and having a contract that can be shared between teams.&lt;/p&gt;</description>
     </item>
-    
+    <item>
+      <title>About</title>
+      <link>https://example.org/about/</link>
+      <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
+      <guid>https://example.org/about/</guid>
+      <description>&lt;p&gt;Page feels a bit empty, doesn&amp;rsquo;t it?&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Contact</title>
+      <link>https://example.org/contact/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://example.org/contact/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>

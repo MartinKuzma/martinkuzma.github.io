@@ -37,10 +37,10 @@ name = "Blog"
 weight = 2
 url = "posts/"
 
-[[languages.en.menu.main]]
-name = "Contact me"
-weight = 5
-url = "contact/"
+#[[languages.en.menu.main]]
+#name = "Contact me"
+#weight = 5
+#url = "contact/"
 
 [[params.social]]
 name = "Github"
