@@ -1,10 +1,10 @@
 +++
-date = '2025-10-11T22:09:06+02:00'
-draft = true
+date = '2025-10-17T22:09:06+02:00'
+draft = false
 title = 'Designing the worst GRPC API ever'
 +++
 ## Why, though?
-We always want to design the best API possible, overcome any hurdles, split everything into neat little boxes, make sure everything is as reusable as possible, and design everything so decoupled that not will ever need to change and if it does, nothing will ever break. GRPC is great for designing APIs in advance and having a contract that can be shared between teams.
+We always want to design the best API possible, overcome any hurdles, split everything into neat little boxes, make sure everything is as reusable as possible, and design everything so decoupled that nothing will ever need to change and if it does, nothing will ever break. GRPC is great for designing APIs in advance and having a contract that can be shared between teams.
 
 Life isn't fair, life isn't easy. Nothing will work out as planned, so let's just go ahead and achieve the peak of bad API design. It will happen anyway, so why not embrace it?
 
@@ -12,18 +12,18 @@ Life isn't fair, life isn't easy. Nothing will work out as planned, so let's jus
 Here are some common pitfalls:
 - No single responsibility principle
 - No versioning
-- No documentation or too much of low quality documentation
+- No documentation or too much low-quality documentation
 - No consistency in naming conventions or naming conventions that make no sense
 - Overcomplicated data structures
 - Incorrect use of error codes
 - Misleading comments
 
-I will try to cover all of these points in this post. Hope you are ready...
+I will try to cover all of these points in this post. I hope you are ready...
 
 ## Starting point with a simple generic API
-Let's assume we have application that emits events and has tasks that needs to execute. We want to expose a GRPC API for pushing events and managing tasks. Since there could be thousands of events per second, we want to support batch processing for pushing events. We also want to be able to tell the client which events were successfully processed and which failed.
+Let's assume we have an application that emits events and has tasks that need to execute. We want to expose a GRPC API for pushing events and managing tasks. Since there could be thousands of events per second, we want to support batch processing for pushing events. We also want to be able to tell the client which events were successfully processed and which failed.
 
-For sake of brevity I omitted field validation extensions.
+For the sake of brevity, I omitted field validation extensions.
 
 Don't worry, it will get much smaller once we remove all the (un)necessary stuff.
 
@@ -112,7 +112,7 @@ enum EventResultStatus {
 message EventResult {
     string event_uuid = 1;
     EventResultStatus status = 2;
-    // Additional context about the result, e.g., error details.
+    // Additional context about the result, error details.
     string context_message = 3; 
 }
 ```
@@ -128,8 +128,6 @@ option go_package = "example/v1";
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
-
-
 
 service TaskAssignerService {
     // Assign a task to a worker based on its capabilities.
@@ -232,10 +230,11 @@ message RejectTaskResponse {
 ```
 ## Iteration #1: Cleanup
 During my first iteration I removed:
-- REST support (via HTTP annotations) - why bother when there won't be any browser clients, right? 
-- Helpful comments - let's make implementers make up their own assumptions about the inner workings of our API.
-- Versioning - peak design will never have to change.
-- Language specific options like `go_package` - let others deal with it!
+- REST support (via HTTP annotations) - clients will be limited to GRPC only
+- helpful comments - let's make implementers make up their own assumptions about the inner workings of our API
+- versioning - let's just have one version and change it whenever we want
+- language specific options like `go_package` - everyone should change our proto files to fit their language of choice anyway
+- consistent naming - `task_uuid`, `uuid`, `task_id`? Let's just use whatever comes to mind.
 
 ### Event API
 ```proto
@@ -243,7 +242,6 @@ syntax = "proto3";
 
 package example;
 
-import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
 service ApplicationEventService {
@@ -293,7 +291,6 @@ enum EventResultStatus {
 message EventResult {
     string event_uuid = 1;
     EventResultStatus status = 2;
-    // Additional context about the result, e.g., error details.
     string context_message = 3; 
 }
 ```
@@ -303,7 +300,6 @@ syntax = "proto3";
 
 package example;
 
-import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
 
@@ -367,10 +363,182 @@ message RejectTaskResponse {
 ```
 
 ## Iteration #2: Making the contract looser
-We don't want to be constrained by a strict contract. Contracts are for loosers that don't magicaly know all the secret values and behaviours. We can do this by:
-- Using `string` instead of enums
-- Using `any` instead of `one_of`
+We don't want to be constrained by a strict contract. Contracts are for losers that don't magically know all the secret values and behaviors. We can do this by:
+- using `string` instead of enums
+- using `Struct` instead of  `any` and `one_of` - clients will have to figure out the structure themselves
+- removing `GetMaxBatchSize` - clients should just try and see what works
+- using `string` for timestamps instead of `google.protobuf.Timestamp` - it might be ISO8601, or epoch millis, who knows?
+- removing capability fields - backend should just assign any task to any worker and let the worker figure it out
+
+On the other hand, we want to make the API harder to change, so we might as well remove empty response messages. At first, this might seem like a good idea not to create unnecessary types, but in reality, it makes it impossible to add fields later without breaking clients.
+
+### Event API
+```proto
+syntax = "proto3";
+
+package example;
+
+import "google/protobuf/struct.proto";
+
+service ApplicationEventService {
+    rpc PushEvents (PushEventsRequest) returns (PushEventsResponse) {}
+}
+
+message PushEventsRequest {
+    repeated Event events = 1;
+}
+
+message PushEventsResponse {
+    repeated EventResult results = 1;
+}
+
+message Event {
+    string uuid = 1;
+    string create_time = 2;
+    google.protobuf.Struct payload = 3; // Good luck parsing this!
+}
+
+message EventResult {
+    string event_uuid = 1;
+    string status = 2;
+    string context_message = 3; 
+}
+```
+
+### Task API
+```proto
+syntax = "proto3";
+
+package example;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/empty.proto";
+
+service TaskAssignerService {
+    rpc AssignTask (google.protobuf.Empty) returns (AssignTaskResponse) {}
+    rpc AcknowledgeTask (AcknowledgeTaskRequest) returns (google.protobuf.Empty) {}
+    rpc CompleteTask (CompleteTaskRequest) returns (google.protobuf.Empty) {}
+    rpc RejectTask (RejectTaskRequest) returns (google.protobuf.Empty) {}
+}
+
+message Task {
+    string task_uuid = 1;
+    string description = 2; 
+    string created_time = 4; 
+    google.protobuf.Struct details = 5; 
+}
+
+message TaskResult {
+    bool success = 1;
+    string details = 2;
+}
+
+message AssignTaskResponse {
+    Task task = 1; 
+    string lease_deadline = 2; 
+}
+
+message AcknowledgeTaskRequest {
+    string uuid = 1;
+}
+
+message CompleteTaskRequest {
+    string task_uuid = 1; 
+    TaskResult result = 2;
+}
 
 
-## Iteration #3: Overcomplicating data structures
-- Using `Struct` instead of `any`
+message RejectTaskRequest {
+    string task_id = 1;
+}
+```
+
+## Iteration #3: Mixing everything together
+To make things even worse, we can:
+- condense RPCs that do similar things into a single RPC with an action field
+- join orthogonal services into a single service and start mixing responsibilities
+- remove any information about event processing results except for a boolean flag
+
+### Condensed API
+```proto
+syntax = "proto3";
+
+package example;
+
+import "google/protobuf/struct.proto";
+
+// Nice and vague, just as we like it
+service ApplicationService {
+    rpc Sync (Input) returns (Output) {}
+}
+
+message Input {
+    repeated Event events = 1;
+    repeated string completed_task_ids = 2;
+    repeated string rejected_task_ids = 3;
+
+    // We need a way to track which tasks we've already received since we removed AssignTask.
+    // We can use delta tokens for that. Downside is that the client has to persist this between calls.
+    string delta_token = 4; 
+}
+
+message Output {
+    repeated Task tasks = 1;
+    bool events_processed = 2; // Good luck figuring out how to handle partial failures!
+    string next_delta_token = 3;
+}
+
+message Event {
+    int32 id = 1;
+    string create_time = 2;
+    google.protobuf.Struct payload = 3;
+}
+
+message Task {
+    string id = 1;
+    google.protobuf.Struct details = 2;
+}
+```
+
+## Iteration #4: The final touch
+Up to this point, we still considered the remote possibility that something might go wrong. From now on, we will assume that everything always works perfectly. The backend will always return all available tasks and remove them from the queue. That means we no longer need delta tokens.
+
+### Condensed API
+```proto
+syntax = "proto3";
+
+package example;
+
+import "google/protobuf/struct.proto";
+
+service ApplicationService {
+    rpc Sync (Input) returns (Output) {}
+}
+
+message Input {
+    repeated Event events = 1;
+    // Let's just assume all tasks previously returned were completed before the call.
+}
+
+message Output {
+    repeated Task tasks = 1;
+    // We assume all events are always processed successfully.
+    // No delta tokens needed since every task is always accepted and handled.
+}
+
+message Event {
+    // No need for IDs, we don't need to deduplicate events anymore.
+    // Backend will fill in create_time anyway.
+    google.protobuf.Struct payload = 2;
+}
+
+message Task {
+    // No need for IDs, tasks are one-time use only.
+    google.protobuf.Struct details = 2;
+}
+```
+
+## Conclusion
+As you can see, it takes a good effort to design a truly bad GRPC API. As I progressed through the iterations, the definition became shorter and more vague, making it harder for clients to implement the API correctly. What seems to be a good idea at first, like using generic structures or using the same call for multiple actions, quickly turns into a nightmare.
+
+Maybe someone will adopt this design philosophy to discourage anyone from using their API at all, or just to increase their own job security. One can only hope...
