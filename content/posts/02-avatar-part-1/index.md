@@ -1,8 +1,9 @@
 +++
-date = '2025-10-26T22:09:06+02:00'
+date = '2025-10-24T22:09:06+02:00'
 draft = true
 title = 'Pixel avatar Part 1: Extracting depth from iPhone selfie'
 series = ['Pixel Avatar']
+categories = [ "pixel avatar"]
 +++
 
 I need an avatar for my blog's main page, but I don't want an ordinary selfie. I want something more dynamic and unique. How cool would it be to have a pixelated, animated 3D avatar of myself?
@@ -25,7 +26,8 @@ What I used:
 ## Depth from a HEIC file
 High-Efficiency Image File Format (HEIC) is a format used by Apple to store photos. It can store multiple images in a single file, including a smaller depth image that is used to refocus a photo after it has been taken.
 
-Let's take the photo below as an example. 
+Let's take the photo below as an example.
+
 ![Original Photo](cropped_image.png "Original photo")
 
 We can iterate over all the depth images by running the following code:
@@ -43,7 +45,7 @@ for img_idx, img in enumerate(photo_file):
         print(f"-> Depth [{depth_img_idx}] Image size: {depth_img.size}")
 ```
 Output:
-```
+```text
 Image [0] size: (4284, 5712)
 -> Depth [0] Image size: (576, 768)
 ```
@@ -64,6 +66,7 @@ From the histogram, I determined that the most interesting values are between 15
 ![Normalized Depth Image](normalized_depth_image.png "Normalized depth image")
 
 While it is better, it still lacks some depth. I sampled random pixels, discarded the background values, and plotted them in 3D space.
+
 ![3D Scatter Plot](3d_hand_depth.gif "3D scatter plot")
 
 ## Next Steps

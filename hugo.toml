@@ -17,6 +17,7 @@ dateFormat = "January 2, 2006"
 colorScheme = "auto"
 #gravatar = "kuzma_819@hotmail.com"
 maxSeeAlsoItems = 5
+customCSS=["css/custom.css"]
 
 [taxonomies]
 category = "categories"
