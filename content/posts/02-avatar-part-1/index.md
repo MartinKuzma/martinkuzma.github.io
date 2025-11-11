@@ -72,4 +72,4 @@ While it is better, it still lacks some depth. I sampled random pixels, discarde
 ## Next Steps
 As I've shown, the depth data is promising but still requires some processing. Although it lacks fine details, it is sufficient to create the look I am aiming for.
 
- In the next part, I will try to export the pixels and display them in a browser.
+In the next part, I will try to export the pixels and display them in a browser.
