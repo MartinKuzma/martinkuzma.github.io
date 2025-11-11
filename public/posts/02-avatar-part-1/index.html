@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Pixel avatar Part 1: Extracting depth from iPhone selfie · Martin&#39;s inner Cosmos
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Martin Kuzma">
+<meta name="description" content="I need an avatar for my blog&rsquo;s main page, but I don&rsquo;t want an ordinary selfie. I want something more dynamic and unique. How cool would it be to have a pixelated, animated 3D avatar of myself?
+Unfortunately, I don&rsquo;t have the time or the specialized equipment to model my likeness properly. Then I remembered I already have a capable 3D scanning device in my pocket: an iPhone 15. It features LiDAR technology, which is widely used by various scanning apps, and it can create portrait photos with an adjustable focus. This means it must capture some sense of depth. Instead of using an existing app, I decided to try generating an avatar myself using the depth data from a photo.">
+<meta name="keywords" content="">
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Pixel avatar Part 1: Extracting depth from iPhone selfie">
+  <meta name="twitter:description" content="I need an avatar for my blog’s main page, but I don’t want an ordinary selfie. I want something more dynamic and unique. How cool would it be to have a pixelated, animated 3D avatar of myself?
+Unfortunately, I don’t have the time or the specialized equipment to model my likeness properly. Then I remembered I already have a capable 3D scanning device in my pocket: an iPhone 15. It features LiDAR technology, which is widely used by various scanning apps, and it can create portrait photos with an adjustable focus. This means it must capture some sense of depth. Instead of using an existing app, I decided to try generating an avatar myself using the depth data from a photo.">
+
+<meta property="og:url" content="https://martinkuzma.github.io/posts/02-avatar-part-1/">
+  <meta property="og:site_name" content="Martin&#39;s inner Cosmos">
+  <meta property="og:title" content="Pixel avatar Part 1: Extracting depth from iPhone selfie">
+  <meta property="og:description" content="I need an avatar for my blog’s main page, but I don’t want an ordinary selfie. I want something more dynamic and unique. How cool would it be to have a pixelated, animated 3D avatar of myself?
+Unfortunately, I don’t have the time or the specialized equipment to model my likeness properly. Then I remembered I already have a capable 3D scanning device in my pocket: an iPhone 15. It features LiDAR technology, which is widely used by various scanning apps, and it can create portrait photos with an adjustable focus. This means it must capture some sense of depth. Instead of using an existing app, I decided to try generating an avatar myself using the depth data from a photo.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-11-11T16:00:06+02:00">
+    <meta property="article:modified_time" content="2025-11-11T16:00:06+02:00">
+
+
+
+
+<link rel="canonical" href="https://martinkuzma.github.io/posts/02-avatar-part-1/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.4b392a85107b91dbdabc528edf014a6ab1a30cd44cafcd5325c8efe796794fca.css" integrity="sha256-SzkqhRB7kdvavFKO3wFKarGjDNRMr81TJcjv55Z5T8o=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+  
+    
+    <link rel="stylesheet" href="/css/custom.min.b57d4ff42666e5b9dc0afc6f00975bd6369089b89236e6415d19e8ce96522f07.css" integrity="sha256-tX1P9CZm5bncCvxvAJdb1jaQibiSNuZBXRnozpZSLwc=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="https://martinkuzma.github.io/">
+      Martin&#39;s inner Cosmos
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://martinkuzma.github.io/posts/02-avatar-part-1/">
+              Pixel avatar Part 1: Extracting depth from iPhone selfie
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-11-11T16:00:06&#43;02:00">
+                November 11, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/pixel-avatar/">Pixel Avatar</a></div>
+
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>I need an avatar for my blog&rsquo;s main page, but I don&rsquo;t want an ordinary selfie. I want something more dynamic and unique. How cool would it be to have a pixelated, animated 3D avatar of myself?</p>
+<p>Unfortunately, I don&rsquo;t have the time or the specialized equipment to model my likeness properly. Then I remembered I already have a capable 3D scanning device in my pocket: an iPhone 15. It features LiDAR technology, which is widely used by various scanning apps, and it can create portrait photos with an adjustable focus. This means it must capture some sense of depth. Instead of using an existing app, I decided to try generating an avatar myself using the depth data from a photo.</p>
+<p>What I used:</p>
+<ul>
+<li>iPhone 15 to take a photo in portrait mode</li>
+<li>Python with Pillow and pillow-heif libraries to extract depth data from a HEIC file</li>
+</ul>
+<h2 id="requirements">
+  Requirements
+  <a class="heading-link" href="#requirements">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>Pixelated look</li>
+<li>Animated</li>
+<li>Capable of animated transitions between different models</li>
+<li>Lightweight enough to be displayed on a web page</li>
+<li>Minimal dependencies</li>
+</ul>
+<h2 id="depth-from-a-heic-file">
+  Depth from a HEIC file
+  <a class="heading-link" href="#depth-from-a-heic-file">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>High-Efficiency Image File Format (HEIC) is a format used by Apple to store photos. It can store multiple images in a single file, including a smaller depth image that is used to refocus a photo after it has been taken.</p>
+<p>Let&rsquo;s take the photo below as an example.</p>
+<p><img src="/posts/02-avatar-part-1/cropped_image.png" alt="Original Photo" title="Original photo"></p>
+<p>We can iterate over all the depth images by running the following code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> PIL <span style="color:#f92672">import</span> Image
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pillow_heif
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>photo_file <span style="color:#f92672">=</span> pillow_heif<span style="color:#f92672">.</span>open_heif(<span style="color:#e6db74">&#34;original_photo.heic&#34;</span>, convert_hdr_to_8bit<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> img_idx, img <span style="color:#f92672">in</span> enumerate(photo_file):
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Image [</span><span style="color:#e6db74">{</span>img_idx<span style="color:#e6db74">}</span><span style="color:#e6db74">] size: </span><span style="color:#e6db74">{</span>img<span style="color:#f92672">.</span>size<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    depth_images <span style="color:#f92672">=</span> img<span style="color:#f92672">.</span>info[<span style="color:#e6db74">&#34;depth_images&#34;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> depth_img_idx, depth_img <span style="color:#f92672">in</span> enumerate(depth_images):
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;-&gt; Depth [</span><span style="color:#e6db74">{</span>depth_img_idx<span style="color:#e6db74">}</span><span style="color:#e6db74">] Image size: </span><span style="color:#e6db74">{</span>depth_img<span style="color:#f92672">.</span>size<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div><p>Output:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Image [0] size: (4284, 5712)
+</span></span><span style="display:flex;"><span>-&gt; Depth [0] Image size: (576, 768)
+</span></span></code></pre></div><p>As we can see, there is one depth image with a different size from the original photo. Let&rsquo;s extract it and save it as a PNG file.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>depth_img<span style="color:#f92672">.</span>to_pillow()<span style="color:#f92672">.</span>save(<span style="color:#e6db74">&#34;depth_image.png&#34;</span>)
+</span></span></code></pre></div><p><img src="/posts/02-avatar-part-1/cropped_depth_image.png" alt="Depth Image" title="Depth image"></p>
+<h2 id="analyzing-depth-data">
+  Analyzing Depth Data
+  <a class="heading-link" href="#analyzing-depth-data">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>At first glance, all I can see is an outline of the hand. What I really want to know is whether the depth image has enough fine detail to reconstruct nearby objects. To look closely at the distribution of pixel values, I computed the following histogram.</p>
+<p><img src="/posts/02-avatar-part-1/depth_histogram.png" alt="Depth Image Histogram" title="Depth histogram"></p>
+<p>From the histogram, I determined that the most interesting values are between 150 and 220. These account for the hand. Everything below 150 can be treated as background and therefore discarded. After normalizing the values, I was left with a much more detailed depth image of the hand.
+<img src="/posts/02-avatar-part-1/normalized_depth_image.png" alt="Normalized Depth Image" title="Normalized depth image"></p>
+<p>While it is better, it still lacks some depth. I sampled random pixels, discarded the background values, and plotted them in 3D space.</p>
+<p><img src="/posts/02-avatar-part-1/3d_hand_depth.gif" alt="3D Scatter Plot" title="3D scatter plot"></p>
+<h2 id="next-steps">
+  Next Steps
+  <a class="heading-link" href="#next-steps">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>As I&rsquo;ve shown, the depth data is promising but still requires some processing. Although it lacks fine details, it is sufficient to create the look I am aiming for.</p>
+<p>In the next part, I will try to export the pixels and display them in a browser.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+<section class="see-also">
+  
+    
+    
+    
+  
+</section>
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+     Martin Kuzma 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+  
+  
+  <script src="/js/3davatar.min.min.49b4feac7c93cad45a642d7dd578e5bdbd669da10182121f2663129b10c53a48.js" integrity="sha256-SbT&#43;rHyTytRaZC191Xjlvb1mnaEBghIfJmMSmxDFOkg="></script>
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+</html>

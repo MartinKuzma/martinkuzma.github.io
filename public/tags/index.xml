@@ -2,10 +2,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Martin&#39;s inner Cosmos</title>
-    <link>https://example.org/tags/</link>
+    <link>https://martinkuzma.github.io/tags/</link>
     <description>Recent content in Tags on Martin&#39;s inner Cosmos</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <atom:link href="https://example.org/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://martinkuzma.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

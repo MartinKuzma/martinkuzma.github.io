@@ -4,8 +4,9 @@ title = "Martin's inner Cosmos"
 
 theme= "hugo-coder"
 
-
-
+[markup]
+  [markup.goldmark]
+  renderer.unsafe=true
 [pagination]
 pagerSize = 6
 
@@ -18,6 +19,7 @@ colorScheme = "auto"
 #gravatar = "kuzma_819@hotmail.com"
 maxSeeAlsoItems = 5
 customCSS=["css/custom.css"]
+customJS=["js/3davatar.min.js"]
 
 [taxonomies]
 category = "categories"

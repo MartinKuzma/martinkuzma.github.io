@@ -2,10 +2,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Authors on Martin&#39;s inner Cosmos</title>
-    <link>https://example.org/authors/</link>
+    <link>https://martinkuzma.github.io/authors/</link>
     <description>Recent content in Authors on Martin&#39;s inner Cosmos</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <atom:link href="https://example.org/authors/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://martinkuzma.github.io/authors/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

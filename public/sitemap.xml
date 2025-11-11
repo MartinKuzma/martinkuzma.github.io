@@ -2,26 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://example.org/posts/01-worst-grpc-api/</loc>
+    <loc>https://martinkuzma.github.io/categories/</loc>
+    <lastmod>2025-11-11T16:00:06+02:00</lastmod>
+  </url><url>
+    <loc>https://martinkuzma.github.io/</loc>
+    <lastmod>2025-11-11T16:00:06+02:00</lastmod>
+  </url><url>
+    <loc>https://martinkuzma.github.io/categories/pixel-avatar/</loc>
+    <lastmod>2025-11-11T16:00:06+02:00</lastmod>
+  </url><url>
+    <loc>https://martinkuzma.github.io/series/pixel-avatar/</loc>
+    <lastmod>2025-11-11T16:00:06+02:00</lastmod>
+  </url><url>
+    <loc>https://martinkuzma.github.io/posts/02-avatar-part-1/</loc>
+    <lastmod>2025-11-11T16:00:06+02:00</lastmod>
+  </url><url>
+    <loc>https://martinkuzma.github.io/posts/</loc>
+    <lastmod>2025-11-11T16:00:06+02:00</lastmod>
+  </url><url>
+    <loc>https://martinkuzma.github.io/series/</loc>
+    <lastmod>2025-11-11T16:00:06+02:00</lastmod>
+  </url><url>
+    <loc>https://martinkuzma.github.io/posts/01-worst-grpc-api/</loc>
     <lastmod>2025-10-17T22:09:06+02:00</lastmod>
   </url><url>
-    <loc>https://example.org/</loc>
-    <lastmod>2025-10-17T22:09:06+02:00</lastmod>
-  </url><url>
-    <loc>https://example.org/posts/</loc>
-    <lastmod>2025-10-17T22:09:06+02:00</lastmod>
-  </url><url>
-    <loc>https://example.org/about/</loc>
+    <loc>https://martinkuzma.github.io/about/</loc>
     <lastmod>2019-02-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://example.org/authors/</loc>
+    <loc>https://martinkuzma.github.io/authors/</loc>
   </url><url>
-    <loc>https://example.org/categories/</loc>
+    <loc>https://martinkuzma.github.io/contact/</loc>
   </url><url>
-    <loc>https://example.org/contact/</loc>
-  </url><url>
-    <loc>https://example.org/series/</loc>
-  </url><url>
-    <loc>https://example.org/tags/</loc>
+    <loc>https://martinkuzma.github.io/tags/</loc>
   </url>
 </urlset>

@@ -2,31 +2,38 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Martin&#39;s inner Cosmos</title>
-    <link>https://example.org/</link>
+    <link>https://martinkuzma.github.io/</link>
     <description>Recent content on Martin&#39;s inner Cosmos</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 17 Oct 2025 22:09:06 +0200</lastBuildDate>
-    <atom:link href="https://example.org/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 11 Nov 2025 16:00:06 +0200</lastBuildDate>
+    <atom:link href="https://martinkuzma.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pixel avatar Part 1: Extracting depth from iPhone selfie</title>
+      <link>https://martinkuzma.github.io/posts/02-avatar-part-1/</link>
+      <pubDate>Tue, 11 Nov 2025 16:00:06 +0200</pubDate>
+      <guid>https://martinkuzma.github.io/posts/02-avatar-part-1/</guid>
+      <description>&lt;p&gt;I need an avatar for my blog&amp;rsquo;s main page, but I don&amp;rsquo;t want an ordinary selfie. I want something more dynamic and unique. How cool would it be to have a pixelated, animated 3D avatar of myself?&lt;/p&gt;&#xA;&lt;p&gt;Unfortunately, I don&amp;rsquo;t have the time or the specialized equipment to model my likeness properly. Then I remembered I already have a capable 3D scanning device in my pocket: an iPhone 15. It features LiDAR technology, which is widely used by various scanning apps, and it can create portrait photos with an adjustable focus. This means it must capture some sense of depth. Instead of using an existing app, I decided to try generating an avatar myself using the depth data from a photo.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Designing the worst GRPC API ever</title>
-      <link>https://example.org/posts/01-worst-grpc-api/</link>
+      <link>https://martinkuzma.github.io/posts/01-worst-grpc-api/</link>
       <pubDate>Fri, 17 Oct 2025 22:09:06 +0200</pubDate>
-      <guid>https://example.org/posts/01-worst-grpc-api/</guid>
+      <guid>https://martinkuzma.github.io/posts/01-worst-grpc-api/</guid>
       <description>&lt;h2 id=&#34;why-though&#34;&gt;&#xA;  Why, though?&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#why-though&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;We always want to design the best API possible, overcome any hurdles, split everything into neat little boxes, make sure everything is as reusable as possible, and design everything so decoupled that nothing will ever need to change and if it does, nothing will ever break. GRPC is great for designing APIs in advance and having a contract that can be shared between teams.&lt;/p&gt;</description>
     </item>
     <item>
       <title>About</title>
-      <link>https://example.org/about/</link>
+      <link>https://martinkuzma.github.io/about/</link>
       <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
-      <guid>https://example.org/about/</guid>
+      <guid>https://martinkuzma.github.io/about/</guid>
       <description>&lt;p&gt;Page feels a bit empty, doesn&amp;rsquo;t it?&lt;/p&gt;</description>
     </item>
     <item>
       <title>Contact</title>
-      <link>https://example.org/contact/</link>
+      <link>https://martinkuzma.github.io/contact/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://example.org/contact/</guid>
+      <guid>https://martinkuzma.github.io/contact/</guid>
       <description></description>
     </item>
   </channel>

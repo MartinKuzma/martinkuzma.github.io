@@ -1,6 +1,6 @@
 +++
-date = '2025-10-24T22:09:06+02:00'
-draft = true
+date = '2025-11-11T16:00:06+02:00'
+draft = false
 title = 'Pixel avatar Part 1: Extracting depth from iPhone selfie'
 series = ['Pixel Avatar']
 categories = [ "pixel avatar"]

@@ -56,6 +56,7 @@ let animate = function () {
 renderer.setAnimationLoop(animate);
 ```
 Which renders something like this:
+
 ![Three.js Random Sprites](sprites.png "Three.js Random Sprites")
 
 Now I need to serialize the depth and color data from the photo, export it as JSON, and load it in the Three.js application.
@@ -77,10 +78,47 @@ Iterating over the points and creating sprites for each of them with specific co
 ![Hand made of sprites](hand.png "Hand made of sprites")
 
 ## You Rotate Me Right Round
-Let's add some camera rotation to make it more dynamic.
-//TODO code snippet
+Let's add some camera rotation to make it more dynamic. Since sprites in Three.js won't be affected by rotation around the Y axis, I need to rotate the camera's position manually. For that I can use simple trigonometry:
+```typescript
+let animate = function () {
+    const radius = 2.0; // Distance from the center
+    const rotationSpeed = 0.01; // Speed of rotation
+
+    // CameraRotation is increased over time, it represents the angle in radians
+    // DeltaTime is the time elapsed since the last frame, but you already knew that.
+    cameraRotation = cameraRotation + (rotationSpeed*deltaTime);
+
+    camera.position.x = radius * Math.sin(cameraRotation);
+    camera.position.z = radius * Math.cos(cameraRotation);
+    // Always look at the center
+    camera.lookAt(0, 0, 0);
+
+    renderer.render(scene, camera);
+};
+
+```
 
 ![Rotating Hand](hand_rotating.gif "Rotating Hand")
 
 ## Tween baby, Tween!
 I wannt to have smooth transitions between different models. Usually, I would try to simulate movement by updating postions in the animation loop. However, for more complex animations with predictible timing and easing functions, it is better to just use a tweening library. I chose [tween.js](https://github.com/tweenjs/tween.js).
+
+```typescript
+
+
+```
+
+<div id="avatar-container" style="width: 100%; height: 500px; background-color: #1a1a1a; border-radius: 8px;"></div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    window['3DAvatar'].showModels([
+            "3.json", 
+            "4.json",
+        ],
+        {
+            nextModelIntervalSeconds: 8,
+            cameraDistance: 1.0,
+        }
+    )    
+});
+</script>

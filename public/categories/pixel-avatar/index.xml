@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pixel Avatar on Martin&#39;s inner Cosmos</title>
+    <link>https://martinkuzma.github.io/categories/pixel-avatar/</link>
+    <description>Recent content in Pixel Avatar on Martin&#39;s inner Cosmos</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 11 Nov 2025 16:00:06 +0200</lastBuildDate>
+    <atom:link href="https://martinkuzma.github.io/categories/pixel-avatar/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pixel avatar Part 1: Extracting depth from iPhone selfie</title>
+      <link>https://martinkuzma.github.io/posts/02-avatar-part-1/</link>
+      <pubDate>Tue, 11 Nov 2025 16:00:06 +0200</pubDate>
+      <guid>https://martinkuzma.github.io/posts/02-avatar-part-1/</guid>
+      <description>&lt;p&gt;I need an avatar for my blog&amp;rsquo;s main page, but I don&amp;rsquo;t want an ordinary selfie. I want something more dynamic and unique. How cool would it be to have a pixelated, animated 3D avatar of myself?&lt;/p&gt;&#xA;&lt;p&gt;Unfortunately, I don&amp;rsquo;t have the time or the specialized equipment to model my likeness properly. Then I remembered I already have a capable 3D scanning device in my pocket: an iPhone 15. It features LiDAR technology, which is widely used by various scanning apps, and it can create portrait photos with an adjustable focus. This means it must capture some sense of depth. Instead of using an existing app, I decided to try generating an avatar myself using the depth data from a photo.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
