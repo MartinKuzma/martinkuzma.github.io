@@ -135,7 +135,7 @@
       
 <section class="container centered">
   <div class="about">
-    <div id="avatar-container" style="height: 400px; min-width: 450px;"></div>
+    <div id="avatar-container" style="height: 500px; min-width: 550px;"></div>
     
     <h1>Martin Kuzma</h1>
     <h2></h2>
@@ -169,11 +169,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     window['3DAvatar'].showModels([
           "data/3.json",
+          "data/5.json",
           "data/4.json",
         ],
         {
             nextModelIntervalSeconds: 12,
             cameraDistance: 1.0,
+            pointScale: 0.008,
             chanceOfFloatingPoint: 0.3,
         }
     )
