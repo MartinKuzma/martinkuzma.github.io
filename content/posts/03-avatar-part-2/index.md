@@ -225,6 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "4.json",
         ],
         {
+            pointScale: 0.007,
             nextModelIntervalSeconds: 8,
             cameraDistance: 1.0,
             chanceOfFloatingPoint: 0.2,
