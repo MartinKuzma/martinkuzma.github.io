@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <title>
-  Pixel avatar Part 2:  · Martin&#39;s inner Cosmos
+  Pixel avatar Part 2: Displaying points in 3D · Martin&#39;s inner Cosmos
 </title>
   <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +14,7 @@
 
 <meta name="author" content="Martin Kuzma">
 <meta name="description" content="In the previous part, I extracted depth data from a HEIC file taken with an iPhone 15. Now I need to figure out how to display it as a pixelated 3D avatar on my blog.
+Spoiler: I did and you can see the live demo at the bottom of this post.
 
   Options for Displaying Points
   
@@ -26,7 +27,7 @@ What I want to achieve:
 Display 100-2000 points
 Animate the points to create a dynamic effect
 Each point should have a color sampled from the original image
-Have an jittering motion to give a lively appearance
+Have a jittering motion to give a lively appearance
 Be capable of transitioning between different models smoothly
 
 There are several approaches I could take to display points:">
@@ -35,28 +36,30 @@ There are several approaches I could take to display points:">
 
 
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Pixel avatar Part 2: ">
+  <meta name="twitter:title" content="Pixel avatar Part 2: Displaying points in 3D">
   <meta name="twitter:description" content="In the previous part, I extracted depth data from a HEIC file taken with an iPhone 15. Now I need to figure out how to display it as a pixelated 3D avatar on my blog.
+Spoiler: I did and you can see the live demo at the bottom of this post.
 Options for Displaying Points Link to heading What I want to achieve:
-Display 100-2000 points Animate the points to create a dynamic effect Each point should have a color sampled from the original image Have an jittering motion to give a lively appearance Be capable of transitioning between different models smoothly There are several approaches I could take to display points:">
+Display 100-2000 points Animate the points to create a dynamic effect Each point should have a color sampled from the original image Have a jittering motion to give a lively appearance Be capable of transitioning between different models smoothly There are several approaches I could take to display points:">
 
-<meta property="og:url" content="http://localhost:1313/posts/03-avatar-part-2/">
+<meta property="og:url" content="https://martinkuzma.github.io/posts/03-avatar-part-2/">
   <meta property="og:site_name" content="Martin&#39;s inner Cosmos">
-  <meta property="og:title" content="Pixel avatar Part 2: ">
+  <meta property="og:title" content="Pixel avatar Part 2: Displaying points in 3D">
   <meta property="og:description" content="In the previous part, I extracted depth data from a HEIC file taken with an iPhone 15. Now I need to figure out how to display it as a pixelated 3D avatar on my blog.
+Spoiler: I did and you can see the live demo at the bottom of this post.
 Options for Displaying Points Link to heading What I want to achieve:
-Display 100-2000 points Animate the points to create a dynamic effect Each point should have a color sampled from the original image Have an jittering motion to give a lively appearance Be capable of transitioning between different models smoothly There are several approaches I could take to display points:">
+Display 100-2000 points Animate the points to create a dynamic effect Each point should have a color sampled from the original image Have a jittering motion to give a lively appearance Be capable of transitioning between different models smoothly There are several approaches I could take to display points:">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2025-10-24T22:09:06+02:00">
-    <meta property="article:modified_time" content="2025-10-24T22:09:06+02:00">
-      <meta property="og:see_also" content="http://localhost:1313/posts/02-avatar-part-1/">
+    <meta property="article:published_time" content="2025-12-14T13:00:00+02:00">
+    <meta property="article:modified_time" content="2025-12-14T13:00:00+02:00">
+      <meta property="og:see_also" content="https://martinkuzma.github.io/posts/02-avatar-part-1/">
 
 
 
 
-<link rel="canonical" href="http://localhost:1313/posts/03-avatar-part-2/">
+<link rel="canonical" href="https://martinkuzma.github.io/posts/03-avatar-part-2/">
 
 
 <link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -66,7 +69,7 @@ Display 100-2000 points Animate the points to create a dynamic effect Each point
 
   
   
-  <link rel="stylesheet" href="/css/coder.css" media="screen">
+  <link rel="stylesheet" href="/css/coder.min.4b392a85107b91dbdabc528edf014a6ab1a30cd44cafcd5325c8efe796794fca.css" integrity="sha256-SzkqhRB7kdvavFKO3wFKarGjDNRMr81TJcjv55Z5T8o=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -76,7 +79,7 @@ Display 100-2000 points Animate the points to create a dynamic effect Each point
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -84,7 +87,7 @@ Display 100-2000 points Animate the points to create a dynamic effect Each point
  
   
     
-    <link rel="stylesheet" href="/css/custom.css" media="screen">
+    <link rel="stylesheet" href="/css/custom.min.b57d4ff42666e5b9dc0afc6f00975bd6369089b89236e6415d19e8ce96522f07.css" integrity="sha256-tX1P9CZm5bncCvxvAJdb1jaQibiSNuZBXRnozpZSLwc=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -129,7 +132,7 @@ Display 100-2000 points Animate the points to create a dynamic effect Each point
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="http://localhost:1313/">
+    <a class="navigation-title" href="https://martinkuzma.github.io/">
       Martin&#39;s inner Cosmos
     </a>
     
@@ -164,8 +167,8 @@ Display 100-2000 points Animate the points to create a dynamic effect Each point
       <header>
         <div class="post-title">
           <h1 class="title">
-            <a class="title-link" href="http://localhost:1313/posts/03-avatar-part-2/">
-              Pixel avatar Part 2: 
+            <a class="title-link" href="https://martinkuzma.github.io/posts/03-avatar-part-2/">
+              Pixel avatar Part 2: Displaying points in 3D
             </a>
           </h1>
         </div>
@@ -173,13 +176,13 @@ Display 100-2000 points Animate the points to create a dynamic effect Each point
           <div class="date">
             <span class="posted-on">
               <i class="fa-solid fa-calendar" aria-hidden="true"></i>
-              <time datetime="2025-10-24T22:09:06&#43;02:00">
-                October 24, 2025
+              <time datetime="2025-12-14T13:00:00&#43;02:00">
+                December 14, 2025
               </time>
             </span>
             <span class="reading-time">
               <i class="fa-solid fa-clock" aria-hidden="true"></i>
-              3-minute read
+              7-minute read
             </span>
           </div>
           
@@ -194,6 +197,7 @@ Display 100-2000 points Animate the points to create a dynamic effect Each point
       <div class="post-content">
         
         <p>In the previous part, I extracted depth data from a HEIC file taken with an iPhone 15. Now I need to figure out how to display it as a pixelated 3D avatar on my blog.</p>
+<p>Spoiler: I did and you can see the <a href="#live-demo" >live demo</a> at the bottom of this post.</p>
 <h2 id="options-for-displaying-points">
   Options for Displaying Points
   <a class="heading-link" href="#options-for-displaying-points">
@@ -206,7 +210,7 @@ Display 100-2000 points Animate the points to create a dynamic effect Each point
 <li>Display 100-2000 points</li>
 <li>Animate the points to create a dynamic effect</li>
 <li>Each point should have a color sampled from the original image</li>
-<li>Have an jittering motion to give a lively appearance</li>
+<li>Have a jittering motion to give a lively appearance</li>
 <li>Be capable of transitioning between different models smoothly</li>
 </ul>
 <p>There are several approaches I could take to display points:</p>
@@ -241,7 +245,7 @@ Display 100-2000 points Animate the points to create a dynamic effect Each point
       </tr>
   </tbody>
 </table>
-<p>Well, looks like Three.js is the best option here. At least this post won&rsquo;t end up being about reiventing matrix multiplications.</p>
+<p>Well, looks like Three.js is the best option here. At least this post won&rsquo;t end up being about reinventing matrix multiplications.</p>
 <h2 id="displaying-points-with-threejs">
   Displaying Points with Three.js
   <a class="heading-link" href="#displaying-points-with-threejs">
@@ -249,7 +253,7 @@ Display 100-2000 points Animate the points to create a dynamic effect Each point
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
-<p>The library providers a lot of examples and features. I was considering using vertices to display points, but I found that the library comes with a built-in type called <code>Sprite</code>, which is perfect for displaying pixelated points. On top of that, sprites are always facing the camera, which is even better.</p>
+<p>The library provides a lot of examples and features. I was considering using vertices to display points, but I found that the library comes with a built-in type called <code>Sprite</code>, which is perfect for displaying pixelated points. On top of that, sprites are always facing the camera, which is even better.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#75715e">// Since this is not a THREE.js tutorial, I&#39;ll skip the setup part.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">camera</span>.<span style="color:#a6e22e">position</span>.<span style="color:#a6e22e">z</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;
 </span></span><span style="display:flex;"><span>
@@ -275,7 +279,84 @@ Display 100-2000 points Animate the points to create a dynamic effect Each point
 </span></span></code></pre></div><p>Which renders something like this:</p>
 <p><img src="/posts/03-avatar-part-2/sprites.png" alt="Three.js Random Sprites" title="Three.js Random Sprites"></p>
 <p>Now I need to serialize the depth and color data from the photo, export it as JSON, and load it in the Three.js application.</p>
-<h2 id="displaying-exported-data">
+<h2 id="sampling-points">
+  Sampling points
+  <a class="heading-link" href="#sampling-points">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>There are two approaches I was considering for sampling points from a photo:</p>
+<ul>
+<li>Fixed grid: sample points at regular intervals</li>
+<li>Random sampling: randomly sample points and then prune</li>
+</ul>
+<p>I chose random sampling because it gives a more interesting look. Another benefit is that I can easily lower the number of points by taking only a slice of the sampled points without worrying about losing overall shape.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sample_random_values</span>(depth_array, num_samples, min_val<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, max_val<span style="color:#f92672">=</span><span style="color:#ae81ff">255</span>):
+</span></span><span style="display:flex;"><span>    all_samples <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([])<span style="color:#f92672">.</span>reshape(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>    attempts <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Keep sampling until we have enough points or reach max attempts</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> len(all_samples) <span style="color:#f92672">&lt;</span> num_samples <span style="color:#f92672">and</span> attempts <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span>:
+</span></span><span style="display:flex;"><span>        attempts <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Sample random pixel coordinates</span>
+</span></span><span style="display:flex;"><span>        x_samples <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>uniform(low<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, high<span style="color:#f92672">=</span>depth_array<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">1</span>], size<span style="color:#f92672">=</span>num_samples)
+</span></span><span style="display:flex;"><span>        y_samples <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>uniform(low<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, high<span style="color:#f92672">=</span>depth_array<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">0</span>], size<span style="color:#f92672">=</span>num_samples)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Get depth values at sampled coordinates</span>
+</span></span><span style="display:flex;"><span>        z_samples <span style="color:#f92672">=</span> depth_array[y_samples<span style="color:#f92672">.</span>astype(int), x_samples<span style="color:#f92672">.</span>astype(int)]
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Combine into (x, y, z) array</span>
+</span></span><span style="display:flex;"><span>        sampled_values <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>vstack((x_samples, y_samples, z_samples))<span style="color:#f92672">.</span>T
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Filter samples based on depth range</span>
+</span></span><span style="display:flex;"><span>        sampled_values <span style="color:#f92672">=</span> sampled_values[ (sampled_values[:,<span style="color:#ae81ff">2</span>] <span style="color:#f92672">&gt;=</span> min_val) <span style="color:#f92672">&amp;</span> (sampled_values[:,<span style="color:#ae81ff">2</span>] <span style="color:#f92672">&lt;=</span> max_val) ]
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Append to all samples</span>
+</span></span><span style="display:flex;"><span>        all_samples <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>append(all_samples, sampled_values, axis<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Ensure samples are not too close to existing samples</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> point <span style="color:#f92672">in</span> sampled_values:
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># Compute euclidean distances to existing samples</span>
+</span></span><span style="display:flex;"><span>            dists <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>sqrt( np<span style="color:#f92672">.</span>sum( (all_samples <span style="color:#f92672">-</span> point)<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span>, axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>) )
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># Find points that are too close</span>
+</span></span><span style="display:flex;"><span>            close_points <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>where( (dists <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2.0</span>) <span style="color:#f92672">&amp;</span> (dists <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0.0</span>) )[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> len(close_points) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>                all_samples <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>append(all_samples, [point], axis<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Return only the requested number of samples</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> all_samples[:num_samples]
+</span></span></code></pre></div><p><img src="/posts/03-avatar-part-2/sampling_lod.gif" alt="Reducing Points" title="Reducing Points by factor of 2"></p>
+<h2 id="normalizing-and-centering-points">
+  Normalizing and Centering Points
+  <a class="heading-link" href="#normalizing-and-centering-points">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>To ensure that models fit well and have roughly the same size, I need to normalize and center the points.
+Normalization is done based on image dimensions for the X and Y axes, and based on depth values for the Z axis.
+Centering is done by subtracting the average position from each point. The average position is simply the average of all X and Y coordinates and represents sort of the &ldquo;center of mass&rdquo; of the model.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">normalize_sampled_points</span>(sampled_points, img_width, img_height):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Normalize points to -0.5 to 0.5 range using image dimensions</span>
+</span></span><span style="display:flex;"><span>    sampled_points[:, <span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> (sampled_points[:, <span style="color:#ae81ff">0</span>] <span style="color:#f92672">/</span> img_width) <span style="color:#f92672">-</span> <span style="color:#ae81ff">0.5</span>
+</span></span><span style="display:flex;"><span>    sampled_points[:, <span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> (sampled_points[:, <span style="color:#ae81ff">1</span>] <span style="color:#f92672">/</span> img_height) <span style="color:#f92672">-</span> <span style="color:#ae81ff">0.5</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Normalize Z axis to -0.5 to 0.5 range</span>
+</span></span><span style="display:flex;"><span>    min_z <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>min(sampled_points[:, <span style="color:#ae81ff">2</span>])
+</span></span><span style="display:flex;"><span>    max_z <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>max(sampled_points[:, <span style="color:#ae81ff">2</span>])
+</span></span><span style="display:flex;"><span>    move_z <span style="color:#f92672">=</span> ((max_z <span style="color:#f92672">+</span> min_z) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2.0</span>) <span style="color:#f92672">/</span> max_z
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    sampled_points[:, <span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> ((sampled_points[:, <span style="color:#ae81ff">2</span>]) <span style="color:#f92672">/</span> max_z) <span style="color:#f92672">-</span> move_z
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Center points around origin by subtracting average position</span>
+</span></span><span style="display:flex;"><span>    avg_x <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>average(sampled_points[:,<span style="color:#ae81ff">0</span>])
+</span></span><span style="display:flex;"><span>    avg_y <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>average(sampled_points[:,<span style="color:#ae81ff">1</span>])
+</span></span><span style="display:flex;"><span>    sampled_points[:,<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> sampled_points[:,<span style="color:#ae81ff">0</span>] <span style="color:#f92672">-</span> avg_x
+</span></span><span style="display:flex;"><span>    sampled_points[:,<span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> sampled_points[:,<span style="color:#ae81ff">1</span>] <span style="color:#f92672">-</span> avg_y
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Invert axis for correct orientation</span>
+</span></span><span style="display:flex;"><span>    sampled_points[:, <span style="color:#ae81ff">1</span>] <span style="color:#f92672">*=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1.0</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> sampled_points
+</span></span></code></pre></div><h2 id="displaying-exported-data">
   Displaying Exported Data
   <a class="heading-link" href="#displaying-exported-data">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -286,12 +367,13 @@ Display 100-2000 points Animate the points to create a dynamic effect Each point
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>[
 </span></span><span style="display:flex;"><span>    {
 </span></span><span style="display:flex;"><span>        
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;position&#34;</span> : [<span style="color:#ae81ff">0.1</span>, <span style="color:#ae81ff">0.2</span>, <span style="color:#ae81ff">0.3</span>],
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;color&#34;</span>: <span style="color:#e6db74">&#34;#FF00FF&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;p&#34;</span> : [<span style="color:#ae81ff">0.1</span>, <span style="color:#ae81ff">0.2</span>, <span style="color:#ae81ff">0.3</span>],
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;c&#34;</span>: <span style="color:#e6db74">&#34;#FF00FF&#34;</span>
 </span></span><span style="display:flex;"><span>    },
 </span></span><span style="display:flex;"><span>]
 </span></span></code></pre></div><p>Iterating over the points and creating sprites for each of them with specific color is straightforward. I tried it with the photo from the previous post, and here is the result:</p>
 <p><img src="/posts/03-avatar-part-2/hand.png" alt="Hand made of sprites" title="Hand made of sprites"></p>
+<p>The exported points, however, needed some tweaking. Namely, I had to normalize all axes to fit within a certain range. I also computed the average position to center the model properly.</p>
 <h2 id="you-rotate-me-right-round">
   You Rotate Me Right Round
   <a class="heading-link" href="#you-rotate-me-right-round">
@@ -299,7 +381,7 @@ Display 100-2000 points Animate the points to create a dynamic effect Each point
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
-<p>Let&rsquo;s add some camera rotation to make it more dynamic. Since sprites in Three.js won&rsquo;t be affected by rotation around the Y axis, I need to rotate the camera&rsquo;s position manually. For that I can use simple trigonometry:</p>
+<p>Let&rsquo;s add some camera rotation to make it more dynamic. Since sprites in Three.js won&rsquo;t be affected by rotation around the Y axis, I need to rotate the camera&rsquo;s position manually. For that, I can use simple trigonometry:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">animate</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> () {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">radius</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">2.0</span>; <span style="color:#75715e">// Distance from the center
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">rotationSpeed</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.01</span>; <span style="color:#75715e">// Speed of rotation
@@ -323,8 +405,51 @@ Display 100-2000 points Animate the points to create a dynamic effect Each point
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
-<p>I wannt to have smooth transitions between different models. Usually, I would try to simulate movement by updating postions in the animation loop. However, for more complex animations with predictible timing and easing functions, it is better to just use a tweening library. I chose <a href="https://github.com/tweenjs/tween.js"  class="external-link" target="_blank" rel="noopener">tween.js</a>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"></code></pre></div><div id="avatar-container" style="width: 100%; height: 500px; background-color: #1a1a1a; border-radius: 8px;"></div>
+<p>I want to have smooth transitions between different models. Usually, I would try to simulate movement by updating positions in the animation loop. However, for more complex animations with predictable timing and easing functions, it is better to just use a tweening library. I chose <a href="https://github.com/tweenjs/tween.js"  class="external-link" target="_blank" rel="noopener">tween.js</a>.
+I mainly focused on the transitioning and jittering motion of some points. Jittering is achieved by randomly offsetting the position of randomly selected points.</p>
+<p>Transitioning is quite straightforward too:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#75715e">// This code is inside of a method for transitioning between models.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// All points were created beforehand and stored in &#39;this.sprites&#39;. 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// When transitioning, we tween each sprite to its new position and color.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">sprites</span>.<span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> ) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">point</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">points</span>[<span style="color:#a6e22e">i</span>]; <span style="color:#75715e">// New target point from the next model
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sprite</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">sprites</span>[<span style="color:#a6e22e">i</span>];
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Tween the new position
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">appearTween</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">TWEEN</span>.<span style="color:#a6e22e">Tween</span>( <span style="color:#a6e22e">sprite</span>.<span style="color:#a6e22e">position</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">to</span>( {<span style="color:#a6e22e">y</span>: <span style="color:#66d9ef">point.y</span>, <span style="color:#a6e22e">x</span>: <span style="color:#66d9ef">point.x</span>, <span style="color:#a6e22e">z</span>: <span style="color:#66d9ef">point.z</span>}, <span style="color:#ae81ff">2000</span> ) <span style="color:#75715e">// 2 seconds
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        .<span style="color:#a6e22e">easing</span>( <span style="color:#a6e22e">TWEEN</span>.<span style="color:#a6e22e">Easing</span>.<span style="color:#a6e22e">Circular</span>.<span style="color:#a6e22e">Out</span> )
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">delay</span>( Math.<span style="color:#a6e22e">random</span>()<span style="color:#f92672">*</span><span style="color:#ae81ff">2000</span>) <span style="color:#75715e">// Add random delay 0-2000ms
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        .<span style="color:#a6e22e">yoyo</span>( <span style="color:#66d9ef">false</span> )
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">onComplete</span>( () <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">tweenGroup</span>.<span style="color:#a6e22e">remove</span>(<span style="color:#a6e22e">appearTween</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// This is where we could add jittering after the transition
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        })
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">start</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Tween to the new color
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">targetSpriteMaterial</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">SpriteMaterial</span>( { <span style="color:#a6e22e">color</span>: <span style="color:#66d9ef">point.color</span> } );
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">colorTween</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">TWEEN</span>.<span style="color:#a6e22e">Tween</span>( <span style="color:#a6e22e">sprite</span>.<span style="color:#a6e22e">material</span>.<span style="color:#a6e22e">color</span> )
+</span></span><span style="display:flex;"><span>    .<span style="color:#a6e22e">to</span>( <span style="color:#a6e22e">targetSpriteMaterial</span>.<span style="color:#a6e22e">color</span>, <span style="color:#ae81ff">2000</span> )
+</span></span><span style="display:flex;"><span>    .<span style="color:#a6e22e">easing</span>(<span style="color:#a6e22e">TWEEN</span>.<span style="color:#a6e22e">Easing</span>.<span style="color:#a6e22e">Quadratic</span>.<span style="color:#a6e22e">InOut</span>)
+</span></span><span style="display:flex;"><span>    .<span style="color:#a6e22e">delay</span>(<span style="color:#ae81ff">1000</span>) <span style="color:#75715e">// Add random delay 0-1000ms
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    .<span style="color:#a6e22e">yoyo</span>(<span style="color:#66d9ef">false</span>)
+</span></span><span style="display:flex;"><span>    .<span style="color:#a6e22e">start</span>();
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Add tweens to the group for updating
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">tweenGroup</span>.<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">appearTween</span>);            
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">tweenGroup</span>.<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">colorTween</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="live-demo">
+  Live Demo
+  <a class="heading-link" href="#live-demo">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<div id="avatar-container" style="width: 100%; height: 500px; background-color: #1a1a1a; border-radius: 8px;"></div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     window['3DAvatar'].showModels([
@@ -334,10 +459,34 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             nextModelIntervalSeconds: 8,
             cameraDistance: 1.0,
+            chanceOfFloatingPoint: 0.2,
         }
     )    
 });
 </script>
+<h2 id="what-could-be-improved">
+  What could be improved?
+  <a class="heading-link" href="#what-could-be-improved">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>Performance: While this solution works well for a few thousand points, ambitious use-cases would benefit from particle systems or shaders.</li>
+<li>Better sampling: Random uniform sampling with depth-check works well, but might produce clusters of points. Poisson disc sampling should yield better results.</li>
+<li>Library size: Three.js and tween.js are quite large libraries. The whole avatar library is around 502 KB minified.</li>
+<li>Size of JSON files: A binary format could reduce the size of model files significantly.</li>
+</ul>
+<h2 id="conclusion">
+  Conclusion
+  <a class="heading-link" href="#conclusion">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>I was able to create the desired pixelated 3D avatar using depth data extracted from an iPhone selfie. The process involved sampling points, exporting them as JSON, and displaying them using Three.js.</p>
+<p>You can check out the full source code or even create your own avatar on <a href="https://github.com/MartinKuzma/3D-web-avatar"  class="external-link" target="_blank" rel="noopener">GitHub</a></p>
+
       </div>
 
 
@@ -387,13 +536,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   
   
-  <script src="/js/coder.js"></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   
   
   
-  <script src="/js/3davatar.min.js"></script>
+  <script src="/js/3davatar.min.min.2e81f5f9f345b4ca27f94e6663ed9df413fde4ddcd929930098f0a8a76f09365.js" integrity="sha256-LoH1&#43;fNFtMon&#43;U5mY&#43;2d9BP95N3NkpkwCY8Kinbwk2U="></script>
   
   
 

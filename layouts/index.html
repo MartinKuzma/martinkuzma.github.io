@@ -37,11 +37,13 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     window['3DAvatar'].showModels([
-          "data/3.json", 
+          "data/3.json",
+          "data/4.json",
         ],
         {
-            nextModelIntervalSeconds: 8,
+            nextModelIntervalSeconds: 12,
             cameraDistance: 1.0,
+            chanceOfFloatingPoint: 0.3,
         }
     )
     

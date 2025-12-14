@@ -6,8 +6,15 @@
     <description>Recent content in Posts on Martin&#39;s inner Cosmos</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 11 Nov 2025 16:00:06 +0200</lastBuildDate>
+    <lastBuildDate>Sun, 14 Dec 2025 13:00:00 +0200</lastBuildDate>
     <atom:link href="https://martinkuzma.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pixel avatar Part 2: Displaying points in 3D</title>
+      <link>https://martinkuzma.github.io/posts/03-avatar-part-2/</link>
+      <pubDate>Sun, 14 Dec 2025 13:00:00 +0200</pubDate>
+      <guid>https://martinkuzma.github.io/posts/03-avatar-part-2/</guid>
+      <description>&lt;p&gt;In the previous part, I extracted depth data from a HEIC file taken with an iPhone 15. Now I need to figure out how to display it as a pixelated 3D avatar on my blog.&lt;/p&gt;&#xA;&lt;p&gt;Spoiler: I did and you can see the &lt;a href=&#34;#live-demo&#34; &gt;live demo&lt;/a&gt; at the bottom of this post.&lt;/p&gt;&#xA;&lt;h2 id=&#34;options-for-displaying-points&#34;&gt;&#xA;  Options for Displaying Points&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#options-for-displaying-points&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;What I want to achieve:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Display 100-2000 points&lt;/li&gt;&#xA;&lt;li&gt;Animate the points to create a dynamic effect&lt;/li&gt;&#xA;&lt;li&gt;Each point should have a color sampled from the original image&lt;/li&gt;&#xA;&lt;li&gt;Have a jittering motion to give a lively appearance&lt;/li&gt;&#xA;&lt;li&gt;Be capable of transitioning between different models smoothly&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;There are several approaches I could take to display points:&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Pixel avatar Part 1: Extracting depth from iPhone selfie</title>
       <link>https://martinkuzma.github.io/posts/02-avatar-part-1/</link>
