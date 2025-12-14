@@ -1,5 +1,6 @@
 +++
 date = '2025-12-14T13:00:00+02:00'
+edited = '2025-12-24T21:10:00+02:00'
 draft = false
 title = 'Pixel avatar Part 2: Displaying points in 3D'
 series = ['Pixel Avatar']
@@ -112,7 +113,8 @@ Centering is done by subtracting the average position from each point. The avera
 ```python
 def normalize_sampled_points(sampled_points, img_width, img_height):
     # Normalize points to -0.5 to 0.5 range using image dimensions
-    sampled_points[:, 0] = (sampled_points[:, 0] / img_width) - 0.5
+    aspect_ratio = img_width / img_height
+    sampled_points[:, 0] = (sampled_points[:, 0] / img_width * aspect_ratio) - 0.5
     sampled_points[:, 1] = (sampled_points[:, 1] / img_height) - 0.5
     
     # Normalize Z axis to -0.5 to 0.5 range
