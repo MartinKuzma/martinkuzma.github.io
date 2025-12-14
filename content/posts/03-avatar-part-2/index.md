@@ -104,8 +104,6 @@ def sample_random_values(depth_array, num_samples, min_val=0, max_val=255):
     return all_samples[:num_samples]
 ```
 
-![Reducing Points](sampling_lod.gif "Reducing Points by factor of 2")
-
 ## Normalizing and Centering Points
 To ensure that models fit well and have roughly the same size, I need to normalize and center the points. 
 Normalization is done based on image dimensions for the X and Y axes, and based on depth values for the Z axis. 
