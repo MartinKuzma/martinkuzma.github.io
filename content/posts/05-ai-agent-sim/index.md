@@ -18,7 +18,7 @@ What if the agents are written by LLMs so that they can run and design simulatio
 
 Main benefits of this approach would be:
 - LLMs don't have to write simulation code from scratch (less tokens used)
-- LLMS can restore and modify simulation state on the fly, enabling dynamic experimentation
+- LLMs can restore and modify simulation state on the fly, enabling dynamic experimentation
 - With fully focused on agent's implementations, context window won't be wasted on mundane simulation code
 
 Since I'm using Github Copilot, I can't determine the exact token usage. It is also not clear how to compare it to a scenario where LLMs write the whole simulation code as it would most likely try to create a different kind of simulation.
@@ -34,7 +34,7 @@ What I have in mind is something like this:
 - Discrete simulation steps so that LLMs can control the pace of the simulation
 - Entities are decoupled by messages. Messages should be compatible with other scripting languages in the future.
 
-For simulation itself I was planning to use a simple system in which agents can send each other messages and interact with the environment. However, I couldn't bear the thought of doing something so basic, so I decided to complicate my life by adding ECS (Entity Component System) architecture to the mix. 
+For simulation itself I was planning to use a simple system in which agents can send each other messages and interact with the environment. However, I couldn't bear the thought of doing something so basic, so I decided to complicate my life by adding **Entity Component System** (ECS) architecture to the mix. 
 
 I didn't want to use any existing ECS libraries - I wanna learn! As it turns out, making an performant ECS system in Rust is quite painful. I wasn't satisfied but it was somewhat working, however I realized that I was trying to solve a different problem. ECS is great for games where you can leverage data locality, but in my case I only need to manage scripts and expose some API to them. Back to square one.
 
@@ -109,10 +109,10 @@ The loop (at the moment of writing) looks something like this:
    - Collect commands issued by the entity
 4. Process all collected commands
 ```
-Nothing too fancy. No parallelism yet.
+Nothing too fancy. Parallelization is not my concern at the moment, but it can be added later. The current simulation loop allows for parallel execution of entities.
 
 ## Enabling multiple scripting languages
-To make the scripting language swappable, I had to define messages and states in a language agnostic way. I decided to use JSON for that. 
+To make the scripting language swappable, I had to define messages and states in a language agnostic way. I used serde's Value type to represent states and messages. This way, it is scripting runtime's responsibility to transform the data into the Value type and back. The Value basically represents JSON data, allowing me to directly use it in MCP tools and persistence without changing a thing.
 
 ## MCP Server
 For those who don't know, MCP (Model Context Protocol) is a protocol for LLMs to interact with external tools. It is all the rage nowadays. Or at least was few months ago.
@@ -151,9 +151,9 @@ With MCP server and simulation runtime ready, it's time to let LLMs reason!
 | Prompt | _Create a simulation of a simple ecosystem with predators and prey. Determine at which rate the predator population stabilizes given an initial population of 50 predators and 200 prey. After finalizing the simulation, save a snapshots of the worlds to local files. #vivarium_ |
 
 #### Result
-At first, it tried to create a simple predator-prey model. However, advancing the simulation failed due to incorrect parameters. It was able to fix the issue by searching for the correct parameters in the source code. I discovered that the instructions were not up to date. Mea culpa. Experiment was still running regardless. It created a new simulation model that collapsed after 50 steps due to overhunting. Then it tried to fix the model by adjusting the parameters and adding a carrying capacity for the prey population.
+At first, it tried to create a simple predator-prey model. However, advancing the simulation failed due to incorrect parameters. It was able to fix the issue by searching for the correct parameters in the source code. I discovered that the instructions were not up to date. Mea culpa. Experiment was still running regardless. It created a new simulation model that collapsed after 50 steps due to overhunting. Then it tried to fix the model by adjusting the parameters and adding a carrying capacity for the prey population. This part felt like **cheating**, but end goal is to verify the whole concept of LLMs designing and running simulations, so I will let it slide this time.
 
-The model consisted of three scripts: spawner, prey and predator. The spawner was responsible for spawning the initial population. It was also responsible for collecting metrics about the population and recording them. Interesting approach!
+The model consisted of three scripts: spawner, prey and predator. The spawner was responsible for spawning the initial population. It was also responsible for collecting metrics about the population and recording them. Interesting approach! 
 Full snapshot of the balanced simulation can be downloaded from [here](ecosystem_stable_snapshot.yaml).
 
 {{< collapsable "Spawner Script" >}}
@@ -391,14 +391,14 @@ Balanced energy dynamics
 ![Collapsed Ecosystem](simulation_collapsed.png "Collapsed Ecosystem")
 ![Stable Ecosystem](simulation_stable.png "Stable Ecosystem")
 
+My conclusion is that the simulation was successful in demonstrating the ability of LLMs to design and run agent-based simulations. Some inefficiencies in the model can be addressed by adding lua functions. I might need to reconsider the way how the simulation is stored so that LLMs can work on it more efficiently. For example, split the configurations and scripts into separate files.
 
 ## Where to go from here?
 This project's scope is beyond of what I can implement right now. I could go on indefinitely adding features. At this stage, it is more or less usable, but there are many things that could be improved.
 
 Here are some ideas for future improvements:
 - Better observability
-- Snaphots and rollbacks (interesting!)
-- Loading simulations from files
+- CLI tool for advancing the simulation without using MCP
 - Resources (representing various consumables in the simulation)
 - Spatial environments (2D/3D grids)
 
