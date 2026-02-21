@@ -1,0 +1,933 @@
+configuration:
+  name: ecosystem_v2
+  script_library:
+    prey_script:
+      id: prey_script
+      kind: lua
+      script: "energy = 100\nage = 0\nreproduction_cooldown = 0\nnext_offspring_id = 1\n\nfunction update(current_time, msgs)\n    age = age + 1\n    \n    -- Check if hunted\n    local eaten = false\n    for _, msg in ipairs(msgs) do\n        if msg.kind == \"hunt\" then\n            eaten = true\n            break\n        end\n    end\n    \n    if eaten then\n        self.destroy(self.id)\n        return\n    end\n    \n    -- Gain energy from grazing\n    energy = energy + 5\n    if energy > 150 then\n        energy = 150\n    end\n    \n    -- Death from age or starvation\n    if age > 100 or energy <= 0 then\n        self.destroy(self.id)\n        return\n    end\n    \n    -- Reproduction\n    if reproduction_cooldown > 0 then\n        reproduction_cooldown = reproduction_cooldown - 1\n    end\n    \n    if energy > 100 and age > 10 and reproduction_cooldown == 0 then\n        local offspring_id = \"prey_\" .. self.id .. \"_\" .. next_offspring_id\n        next_offspring_id = next_offspring_id + 1\n        energy = energy - 40\n        reproduction_cooldown = 20\n        self.spawn_entity(offspring_id, \"prey_script\", {energy = 80, age = 0, reproduction_cooldown = 10, next_offspring_id = 1})\n    end\nend\n\nfunction get_state()\n    return {energy = energy, age = age, reproduction_cooldown = reproduction_cooldown, next_offspring_id = next_offspring_id}\nend\n\nfunction set_state(state)\n    energy = state.energy\n    age = state.age\n    reproduction_cooldown = state.reproduction_cooldown\n    next_offspring_id = state.next_offspring_id or 1\nend"
+    spawner_script:
+      id: spawner_script
+      kind: lua
+      script: "spawned = false\n\nfunction update(current_time, msgs)\n    if not spawned then\n        -- Spawn 200 prey\n        for i = 1, 200 do\n            local prey_id = \"prey_\" .. i\n            self.spawn_entity(prey_id, \"prey_script\", {energy = 100, age = math.random(0, 30), reproduction_cooldown = math.random(0, 20), next_offspring_id = 1})\n        end\n        \n        -- Spawn 50 predators\n        for i = 1, 50 do\n            local pred_id = \"predator_\" .. i\n            self.spawn_entity(pred_id, \"predator_script\", {energy = 100, age = math.random(0, 30), reproduction_cooldown = math.random(0, 30), hunt_cooldown = math.random(0, 5), next_offspring_id = 1})\n        end\n        \n        spawned = true\n    end\n    \n    -- Record population metrics\n    local all_entities = world.list_entities()\n    local prey_count = 0\n    local predator_count = 0\n    \n    for _, entity_id in ipairs(all_entities) do\n        if entity_id:sub(1, 4) == \"prey\" then\n            prey_count = prey_count + 1\n        elseif entity_id:sub(1, 8) == \"predator\" then\n            predator_count = predator_count + 1\n        end\n    end\n    \n    world.record_metric(\"prey_population\", prey_count)\n    world.record_metric(\"predator_population\", predator_count)\n    world.record_metric(\"total_population\", prey_count + predator_count)\nend\n\nfunction get_state()\n    return {spawned = spawned}\nend\n\nfunction set_state(state)\n    spawned = state.spawned\nend"
+    predator_script:
+      id: predator_script
+      kind: lua
+      script: "energy = 100\nage = 0\nreproduction_cooldown = 0\nhunt_cooldown = 0\nnext_offspring_id = 1\n\nfunction update(current_time, msgs)\n    age = age + 1\n    \n    -- Lose energy over time\n    energy = energy - 3\n    \n    -- Death conditions\n    if age > 150 or energy <= 0 then\n        self.destroy(self.id)\n        return\n    end\n    \n    -- Hunting behavior\n    if hunt_cooldown > 0 then\n        hunt_cooldown = hunt_cooldown - 1\n    end\n    \n    if hunt_cooldown == 0 and energy < 120 then\n        local all_entities = world.list_entities()\n        local prey_list = {}\n        \n        for _, entity_id in ipairs(all_entities) do\n            if entity_id:sub(1, 4) == \"prey\" then\n                table.insert(prey_list, entity_id)\n            end\n        end\n        \n        if #prey_list > 0 then\n            local target = prey_list[math.random(#prey_list)]\n            self.send_msg(target, \"hunt\", {hunter = self.id}, 0)\n            energy = energy + 40\n            hunt_cooldown = 5\n        end\n    end\n    \n    -- Reproduction\n    if reproduction_cooldown > 0 then\n        reproduction_cooldown = reproduction_cooldown - 1\n    end\n    \n    if energy > 130 and age > 15 and reproduction_cooldown == 0 then\n        local offspring_id = \"predator_\" .. self.id .. \"_\" .. next_offspring_id\n        next_offspring_id = next_offspring_id + 1\n        energy = energy - 60\n        reproduction_cooldown = 30\n        self.spawn_entity(offspring_id, \"predator_script\", {energy = 90, age = 0, reproduction_cooldown = 15, hunt_cooldown = 5, next_offspring_id = 1})\n    end\nend\n\nfunction get_state()\n    return {energy = energy, age = age, reproduction_cooldown = reproduction_cooldown, hunt_cooldown = hunt_cooldown, next_offspring_id = next_offspring_id}\nend\n\nfunction set_state(state)\n    energy = state.energy\n    age = state.age\n    reproduction_cooldown = state.reproduction_cooldown\n    hunt_cooldown = state.hunt_cooldown\n    next_offspring_id = state.next_offspring_id or 1\nend"
+  entities:
+  - id: spawner
+    script_id: spawner_script
+    initial_state:
+      spawned: true
+simulation_time: 151
+metrics:
+  metrics:
+    prey_population:
+    - - 1
+      - 0.0
+    - - 2
+      - 200.0
+    - - 3
+      - 209.0
+    - - 4
+      - 205.0
+    - - 5
+      - 207.0
+    - - 6
+      - 205.0
+    - - 7
+      - 209.0
+    - - 8
+      - 203.0
+    - - 9
+      - 214.0
+    - - 10
+      - 200.0
+    - - 11
+      - 206.0
+    - - 12
+      - 211.0
+    - - 13
+      - 206.0
+    - - 14
+      - 217.0
+    - - 15
+      - 229.0
+    - - 16
+      - 235.0
+    - - 17
+      - 240.0
+    - - 18
+      - 236.0
+    - - 19
+      - 244.0
+    - - 20
+      - 242.0
+    - - 21
+      - 247.0
+    - - 22
+      - 251.0
+    - - 23
+      - 239.0
+    - - 24
+      - 220.0
+    - - 25
+      - 227.0
+    - - 26
+      - 242.0
+    - - 27
+      - 243.0
+    - - 28
+      - 249.0
+    - - 29
+      - 237.0
+    - - 30
+      - 215.0
+    - - 31
+      - 220.0
+    - - 32
+      - 219.0
+    - - 33
+      - 230.0
+    - - 34
+      - 204.0
+    - - 35
+      - 198.0
+    - - 36
+      - 196.0
+    - - 37
+      - 188.0
+    - - 38
+      - 197.0
+    - - 39
+      - 189.0
+    - - 40
+      - 181.0
+    - - 41
+      - 166.0
+    - - 42
+      - 166.0
+    - - 43
+      - 174.0
+    - - 44
+      - 126.0
+    - - 45
+      - 123.0
+    - - 46
+      - 99.0
+    - - 47
+      - 93.0
+    - - 48
+      - 94.0
+    - - 49
+      - 59.0
+    - - 50
+      - 52.0
+    - - 51
+      - 28.0
+    - - 52
+      - 17.0
+    - - 53
+      - 9.0
+    - - 54
+      - 0.0
+    - - 55
+      - 0.0
+    - - 56
+      - 0.0
+    - - 57
+      - 0.0
+    - - 58
+      - 0.0
+    - - 59
+      - 0.0
+    - - 60
+      - 0.0
+    - - 61
+      - 0.0
+    - - 62
+      - 0.0
+    - - 63
+      - 0.0
+    - - 64
+      - 0.0
+    - - 65
+      - 0.0
+    - - 66
+      - 0.0
+    - - 67
+      - 0.0
+    - - 68
+      - 0.0
+    - - 69
+      - 0.0
+    - - 70
+      - 0.0
+    - - 71
+      - 0.0
+    - - 72
+      - 0.0
+    - - 73
+      - 0.0
+    - - 74
+      - 0.0
+    - - 75
+      - 0.0
+    - - 76
+      - 0.0
+    - - 77
+      - 0.0
+    - - 78
+      - 0.0
+    - - 79
+      - 0.0
+    - - 80
+      - 0.0
+    - - 81
+      - 0.0
+    - - 82
+      - 0.0
+    - - 83
+      - 0.0
+    - - 84
+      - 0.0
+    - - 85
+      - 0.0
+    - - 86
+      - 0.0
+    - - 87
+      - 0.0
+    - - 88
+      - 0.0
+    - - 89
+      - 0.0
+    - - 90
+      - 0.0
+    - - 91
+      - 0.0
+    - - 92
+      - 0.0
+    - - 93
+      - 0.0
+    - - 94
+      - 0.0
+    - - 95
+      - 0.0
+    - - 96
+      - 0.0
+    - - 97
+      - 0.0
+    - - 98
+      - 0.0
+    - - 99
+      - 0.0
+    - - 100
+      - 0.0
+    - - 101
+      - 0.0
+    - - 102
+      - 0.0
+    - - 103
+      - 0.0
+    - - 104
+      - 0.0
+    - - 105
+      - 0.0
+    - - 106
+      - 0.0
+    - - 107
+      - 0.0
+    - - 108
+      - 0.0
+    - - 109
+      - 0.0
+    - - 110
+      - 0.0
+    - - 111
+      - 0.0
+    - - 112
+      - 0.0
+    - - 113
+      - 0.0
+    - - 114
+      - 0.0
+    - - 115
+      - 0.0
+    - - 116
+      - 0.0
+    - - 117
+      - 0.0
+    - - 118
+      - 0.0
+    - - 119
+      - 0.0
+    - - 120
+      - 0.0
+    - - 121
+      - 0.0
+    - - 122
+      - 0.0
+    - - 123
+      - 0.0
+    - - 124
+      - 0.0
+    - - 125
+      - 0.0
+    - - 126
+      - 0.0
+    - - 127
+      - 0.0
+    - - 128
+      - 0.0
+    - - 129
+      - 0.0
+    - - 130
+      - 0.0
+    - - 131
+      - 0.0
+    - - 132
+      - 0.0
+    - - 133
+      - 0.0
+    - - 134
+      - 0.0
+    - - 135
+      - 0.0
+    - - 136
+      - 0.0
+    - - 137
+      - 0.0
+    - - 138
+      - 0.0
+    - - 139
+      - 0.0
+    - - 140
+      - 0.0
+    - - 141
+      - 0.0
+    - - 142
+      - 0.0
+    - - 143
+      - 0.0
+    - - 144
+      - 0.0
+    - - 145
+      - 0.0
+    - - 146
+      - 0.0
+    - - 147
+      - 0.0
+    - - 148
+      - 0.0
+    - - 149
+      - 0.0
+    - - 150
+      - 0.0
+    - - 151
+      - 0.0
+    predator_population:
+    - - 1
+      - 0.0
+    - - 2
+      - 50.0
+    - - 3
+      - 50.0
+    - - 4
+      - 50.0
+    - - 5
+      - 51.0
+    - - 6
+      - 51.0
+    - - 7
+      - 51.0
+    - - 8
+      - 51.0
+    - - 9
+      - 53.0
+    - - 10
+      - 53.0
+    - - 11
+      - 55.0
+    - - 12
+      - 59.0
+    - - 13
+      - 61.0
+    - - 14
+      - 64.0
+    - - 15
+      - 64.0
+    - - 16
+      - 72.0
+    - - 17
+      - 75.0
+    - - 18
+      - 77.0
+    - - 19
+      - 77.0
+    - - 20
+      - 77.0
+    - - 21
+      - 77.0
+    - - 22
+      - 78.0
+    - - 23
+      - 89.0
+    - - 24
+      - 90.0
+    - - 25
+      - 90.0
+    - - 26
+      - 92.0
+    - - 27
+      - 92.0
+    - - 28
+      - 96.0
+    - - 29
+      - 103.0
+    - - 30
+      - 108.0
+    - - 31
+      - 113.0
+    - - 32
+      - 113.0
+    - - 33
+      - 121.0
+    - - 34
+      - 124.0
+    - - 35
+      - 127.0
+    - - 36
+      - 128.0
+    - - 37
+      - 128.0
+    - - 38
+      - 128.0
+    - - 39
+      - 129.0
+    - - 40
+      - 140.0
+    - - 41
+      - 141.0
+    - - 42
+      - 141.0
+    - - 43
+      - 153.0
+    - - 44
+      - 156.0
+    - - 45
+      - 160.0
+    - - 46
+      - 175.0
+    - - 47
+      - 183.0
+    - - 48
+      - 190.0
+    - - 49
+      - 190.0
+    - - 50
+      - 198.0
+    - - 51
+      - 201.0
+    - - 52
+      - 204.0
+    - - 53
+      - 205.0
+    - - 54
+      - 205.0
+    - - 55
+      - 205.0
+    - - 56
+      - 205.0
+    - - 57
+      - 205.0
+    - - 58
+      - 205.0
+    - - 59
+      - 205.0
+    - - 60
+      - 205.0
+    - - 61
+      - 205.0
+    - - 62
+      - 205.0
+    - - 63
+      - 205.0
+    - - 64
+      - 205.0
+    - - 65
+      - 205.0
+    - - 66
+      - 205.0
+    - - 67
+      - 205.0
+    - - 68
+      - 205.0
+    - - 69
+      - 205.0
+    - - 70
+      - 205.0
+    - - 71
+      - 205.0
+    - - 72
+      - 205.0
+    - - 73
+      - 205.0
+    - - 74
+      - 205.0
+    - - 75
+      - 205.0
+    - - 76
+      - 205.0
+    - - 77
+      - 205.0
+    - - 78
+      - 205.0
+    - - 79
+      - 205.0
+    - - 80
+      - 197.0
+    - - 81
+      - 194.0
+    - - 82
+      - 191.0
+    - - 83
+      - 182.0
+    - - 84
+      - 179.0
+    - - 85
+      - 176.0
+    - - 86
+      - 175.0
+    - - 87
+      - 175.0
+    - - 88
+      - 175.0
+    - - 89
+      - 171.0
+    - - 90
+      - 156.0
+    - - 91
+      - 148.0
+    - - 92
+      - 137.0
+    - - 93
+      - 130.0
+    - - 94
+      - 125.0
+    - - 95
+      - 117.0
+    - - 96
+      - 93.0
+    - - 97
+      - 82.0
+    - - 98
+      - 81.0
+    - - 99
+      - 78.0
+    - - 100
+      - 55.0
+    - - 101
+      - 49.0
+    - - 102
+      - 18.0
+    - - 103
+      - 14.0
+    - - 104
+      - 11.0
+    - - 105
+      - 11.0
+    - - 106
+      - 3.0
+    - - 107
+      - 0.0
+    - - 108
+      - 0.0
+    - - 109
+      - 0.0
+    - - 110
+      - 0.0
+    - - 111
+      - 0.0
+    - - 112
+      - 0.0
+    - - 113
+      - 0.0
+    - - 114
+      - 0.0
+    - - 115
+      - 0.0
+    - - 116
+      - 0.0
+    - - 117
+      - 0.0
+    - - 118
+      - 0.0
+    - - 119
+      - 0.0
+    - - 120
+      - 0.0
+    - - 121
+      - 0.0
+    - - 122
+      - 0.0
+    - - 123
+      - 0.0
+    - - 124
+      - 0.0
+    - - 125
+      - 0.0
+    - - 126
+      - 0.0
+    - - 127
+      - 0.0
+    - - 128
+      - 0.0
+    - - 129
+      - 0.0
+    - - 130
+      - 0.0
+    - - 131
+      - 0.0
+    - - 132
+      - 0.0
+    - - 133
+      - 0.0
+    - - 134
+      - 0.0
+    - - 135
+      - 0.0
+    - - 136
+      - 0.0
+    - - 137
+      - 0.0
+    - - 138
+      - 0.0
+    - - 139
+      - 0.0
+    - - 140
+      - 0.0
+    - - 141
+      - 0.0
+    - - 142
+      - 0.0
+    - - 143
+      - 0.0
+    - - 144
+      - 0.0
+    - - 145
+      - 0.0
+    - - 146
+      - 0.0
+    - - 147
+      - 0.0
+    - - 148
+      - 0.0
+    - - 149
+      - 0.0
+    - - 150
+      - 0.0
+    - - 151
+      - 0.0
+    total_population:
+    - - 1
+      - 0.0
+    - - 2
+      - 250.0
+    - - 3
+      - 259.0
+    - - 4
+      - 255.0
+    - - 5
+      - 258.0
+    - - 6
+      - 256.0
+    - - 7
+      - 260.0
+    - - 8
+      - 254.0
+    - - 9
+      - 267.0
+    - - 10
+      - 253.0
+    - - 11
+      - 261.0
+    - - 12
+      - 270.0
+    - - 13
+      - 267.0
+    - - 14
+      - 281.0
+    - - 15
+      - 293.0
+    - - 16
+      - 307.0
+    - - 17
+      - 315.0
+    - - 18
+      - 313.0
+    - - 19
+      - 321.0
+    - - 20
+      - 319.0
+    - - 21
+      - 324.0
+    - - 22
+      - 329.0
+    - - 23
+      - 328.0
+    - - 24
+      - 310.0
+    - - 25
+      - 317.0
+    - - 26
+      - 334.0
+    - - 27
+      - 335.0
+    - - 28
+      - 345.0
+    - - 29
+      - 340.0
+    - - 30
+      - 323.0
+    - - 31
+      - 333.0
+    - - 32
+      - 332.0
+    - - 33
+      - 351.0
+    - - 34
+      - 328.0
+    - - 35
+      - 325.0
+    - - 36
+      - 324.0
+    - - 37
+      - 316.0
+    - - 38
+      - 325.0
+    - - 39
+      - 318.0
+    - - 40
+      - 321.0
+    - - 41
+      - 307.0
+    - - 42
+      - 307.0
+    - - 43
+      - 327.0
+    - - 44
+      - 282.0
+    - - 45
+      - 283.0
+    - - 46
+      - 274.0
+    - - 47
+      - 276.0
+    - - 48
+      - 284.0
+    - - 49
+      - 249.0
+    - - 50
+      - 250.0
+    - - 51
+      - 229.0
+    - - 52
+      - 221.0
+    - - 53
+      - 214.0
+    - - 54
+      - 205.0
+    - - 55
+      - 205.0
+    - - 56
+      - 205.0
+    - - 57
+      - 205.0
+    - - 58
+      - 205.0
+    - - 59
+      - 205.0
+    - - 60
+      - 205.0
+    - - 61
+      - 205.0
+    - - 62
+      - 205.0
+    - - 63
+      - 205.0
+    - - 64
+      - 205.0
+    - - 65
+      - 205.0
+    - - 66
+      - 205.0
+    - - 67
+      - 205.0
+    - - 68
+      - 205.0
+    - - 69
+      - 205.0
+    - - 70
+      - 205.0
+    - - 71
+      - 205.0
+    - - 72
+      - 205.0
+    - - 73
+      - 205.0
+    - - 74
+      - 205.0
+    - - 75
+      - 205.0
+    - - 76
+      - 205.0
+    - - 77
+      - 205.0
+    - - 78
+      - 205.0
+    - - 79
+      - 205.0
+    - - 80
+      - 197.0
+    - - 81
+      - 194.0
+    - - 82
+      - 191.0
+    - - 83
+      - 182.0
+    - - 84
+      - 179.0
+    - - 85
+      - 176.0
+    - - 86
+      - 175.0
+    - - 87
+      - 175.0
+    - - 88
+      - 175.0
+    - - 89
+      - 171.0
+    - - 90
+      - 156.0
+    - - 91
+      - 148.0
+    - - 92
+      - 137.0
+    - - 93
+      - 130.0
+    - - 94
+      - 125.0
+    - - 95
+      - 117.0
+    - - 96
+      - 93.0
+    - - 97
+      - 82.0
+    - - 98
+      - 81.0
+    - - 99
+      - 78.0
+    - - 100
+      - 55.0
+    - - 101
+      - 49.0
+    - - 102
+      - 18.0
+    - - 103
+      - 14.0
+    - - 104
+      - 11.0
+    - - 105
+      - 11.0
+    - - 106
+      - 3.0
+    - - 107
+      - 0.0
+    - - 108
+      - 0.0
+    - - 109
+      - 0.0
+    - - 110
+      - 0.0
+    - - 111
+      - 0.0
+    - - 112
+      - 0.0
+    - - 113
+      - 0.0
+    - - 114
+      - 0.0
+    - - 115
+      - 0.0
+    - - 116
+      - 0.0
+    - - 117
+      - 0.0
+    - - 118
+      - 0.0
+    - - 119
+      - 0.0
+    - - 120
+      - 0.0
+    - - 121
+      - 0.0
+    - - 122
+      - 0.0
+    - - 123
+      - 0.0
+    - - 124
+      - 0.0
+    - - 125
+      - 0.0
+    - - 126
+      - 0.0
+    - - 127
+      - 0.0
+    - - 128
+      - 0.0
+    - - 129
+      - 0.0
+    - - 130
+      - 0.0
+    - - 131
+      - 0.0
+    - - 132
+      - 0.0
+    - - 133
+      - 0.0
+    - - 134
+      - 0.0
+    - - 135
+      - 0.0
+    - - 136
+      - 0.0
+    - - 137
+      - 0.0
+    - - 138
+      - 0.0
+    - - 139
+      - 0.0
+    - - 140
+      - 0.0
+    - - 141
+      - 0.0
+    - - 142
+      - 0.0
+    - - 143
+      - 0.0
+    - - 144
+      - 0.0
+    - - 145
+      - 0.0
+    - - 146
+      - 0.0
+    - - 147
+      - 0.0
+    - - 148
+      - 0.0
+    - - 149
+      - 0.0
+    - - 150
+      - 0.0
+    - - 151
+      - 0.0
+pending_messages: []

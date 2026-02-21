@@ -2,26 +2,28 @@
 date = '2025-12-24T22:09:06+02:00'
 draft = true
 title = 'Agent Simulation Framework for LLMs'
+[params]
+    featuredImage = "posts/05-ai-agent-sim/featured_img.png"
 +++
 
-_This article was not written by an AI. I only use LLMs to help me with grammar and spelling._
+_This article was not written by an AI. I only use AI to help me with grammar, spelling, and featured image._
 
 ## TL;DR
-I built a scriptable framework for LLMs to create and run agent based simulations to reason about complex systems and emergent behaviour. Skip to [It's simulation time!](#its-simulation-time) to see examples of LLMs using the framework.
+I built a scriptable framework for LLMs to create and run agent based simulations to reason about complex systems and emergent behaviour. Skip to [It's simulation time!](#its-simulation-time) to see example of a LLM using the framework.
 
 Project is open source and available on [https://github.com/MartinKuzma/vivarium](https://github.com/MartinKuzma/vivarium)
 
 ## Motivation
-I always wanted to dig deeper into **agent based simulations**. Namely to understand how complex behaviours can emerge and to model economic and social systems. Building such simulations is hard so I never got around to it. In my imagination, I always pictured that I can just tell an AI to simulate something for me just like **Tony Stark** did. Wait a minute! We have capable LLMs now! And they can write code and use tools!
+I've always wanted to dig deeper into **agent based simulations**. Build, simulate and understand how complex behaviours can emerge and to model economic and social systems. Building such simulations is hard so I never got around to it. In my imagination, I always pictured that I can just tell an AI to simulate something for me just like **Tony Stark** did. Wait a minute! We have capable LLMs now! And they can write code and use tools!
 
-What if the agents are written by LLMs so that they can run and design simulations by themselves? **This would enable LLMs to reason about complex systems by simulating them and observing emerging behaviour.** Wanna let your favorite LLM to figure out which strategy is the best to solve a problem? Let it come up with the model and experiment with it!
+What if the agents are written by LLMs so that they can run and design simulations by themselves? **This would enable LLMs to reason about complex systems by simulating them and observing emerging behaviour.** Want to let your favorite LLM figure out which strategy is the best to solve a problem? Let it come up with the model and experiment with it!
 
-Main benefits of this approach would be:
-- LLMs don't have to write simulation code from scratch (less tokens used)
+The main benefits of this approach would be:
+- LLMs don't have to write simulation code from scratch (fewer tokens used)
 - LLMs can restore and modify simulation state on the fly, enabling dynamic experimentation
-- With fully focused on agent's implementations, context window won't be wasted on mundane simulation code
+- With fully focused on scripts, context windows won't be wasted on mundane simulation code
 
-Since I'm using Github Copilot, I can't determine the exact token usage. It is also not clear how to compare it to a scenario where LLMs write the whole simulation code as it would most likely try to create a different kind of simulation.
+Since I'm using GitHub Copilot, I can't determine the exact token usage. It is also not clear how to compare it to a scenario where LLMs write the whole simulation code as it would most likely try to create a different kind of simulation.
 
 ## Rough Architecture
 I need to build a tool framework usable by LLMs so that they can easily create agents, environments, and run simulations.
@@ -36,10 +38,24 @@ What I have in mind is something like this:
 
 For simulation itself I was planning to use a simple system in which agents can send each other messages and interact with the environment. However, I couldn't bear the thought of doing something so basic, so I decided to complicate my life by adding **Entity Component System** (ECS) architecture to the mix. 
 
-I didn't want to use any existing ECS libraries - I wanna learn! As it turns out, making an performant ECS system in Rust is quite painful. I wasn't satisfied but it was somewhat working, however I realized that I was trying to solve a different problem. ECS is great for games where you can leverage data locality, but in my case I only need to manage scripts and expose some API to them. Back to square one.
+I didn't want to use any existing ECS libraries - I wanna learn! As it turns out, making a performant ECS system in Rust is quite painful. I wasn't satisfied but it was somewhat working, however I realized that I was trying to solve a different problem. ECS is great for games where you can leverage data locality, but in my case I only need to manage scripts and expose some API to them. Back to square one.
 
 I ended up making a simple entity system where each entity has a script controller that runs the script. Entities can send messages to each other via message bus and issue commands to mutate the world state.
-![Simple architecture](mcp_world_system.png "Architecture image")
+
+{{<mermaid>}}
+graph LR
+    MCP["MCP Server"]
+    MCP -->Registry["Registry<br/>create/delete/list worlds"]
+    Registry -->World["World"]
+    World -->Entities["Entity"]
+    World -->MessageBus["Message Bus"]
+    World -->Metrics["Metrics"]
+    Entities -->LuaCtrl["Script Controller"]
+
+    LuaCtrl-->MessageBus
+    LuaCtrl-->Metrics
+    LuaCtrl-->World
+{{</mermaid>}}
 
 | Component       | Description                                                  |
 |-----------------|--------------------------------------------------------------|
@@ -52,7 +68,7 @@ I ended up making a simple entity system where each entity has a script controll
 | Metrics       | Collects and exposes simulation metrics                       |
 
 ## Scripting Language
-To enable LLMs to write agents and environments, I need a scripting language that is easy to use and understand. I wanted to use isolated enviroments so that agents can run independently without interfering with each other. The usual suspects for this are:
+To enable LLMs to write agents and environments, I need a scripting language that is easy to use and understand. I wanted to use isolated environments so that agents can run independently without interfering with each other. The usual suspects for this are:
 - Python
 - JavaScript
 - Lua
@@ -144,14 +160,14 @@ With MCP server and simulation runtime ready, it's time to let LLMs reason!
 
 ### Example: Predator-Prey Model
 
-| Parameter | Value |
-|-----------|-------|
-| Model | Claude Sonnet 4.5 |
-| Environment | Copilot in VSCode |
-| Prompt | _Create a simulation of a simple ecosystem with predators and prey. Determine at which rate the predator population stabilizes given an initial population of 50 predators and 200 prey. After finalizing the simulation, save a snapshots of the worlds to local files. #vivarium_ |
+I used **Claude Sonnet 4.5** for this experiment which I prompted from VSCode using **GitHub Copilot**.
+
+The prompt was following:
+
+_Create a simulation of a simple ecosystem with predators and prey. Determine at which rate the predator population stabilizes given an initial population of 50 predators and 200 prey. After finalizing the simulation, save a snapshots of the worlds to local files. #vivarium_
 
 #### Result
-At first, it tried to create a simple predator-prey model. However, advancing the simulation failed due to incorrect parameters. It was able to fix the issue by searching for the correct parameters in the source code. I discovered that the instructions were not up to date. Mea culpa. Experiment was still running regardless. It created a new simulation model that collapsed after 50 steps due to overhunting. Then it tried to fix the model by adjusting the parameters and adding a carrying capacity for the prey population. This part felt like **cheating**, but end goal is to verify the whole concept of LLMs designing and running simulations, so I will let it slide this time.
+At first, it tried to create a simple predator-prey model. However, advancing the simulation failed due to incorrect parameters. It was able to fix the issue by searching for the correct parameters in the source code. I discovered that the instructions were not up to date. Mea culpa. The experiment was still running regardless. It created a new simulation model that collapsed after 50 steps due to overhunting. Then it tried to fix the model by adjusting the parameters and adding a carrying capacity for the prey population. This part felt like **cheating**, but end goal is to verify the whole concept of LLMs designing and running simulations, so I will let it slide this time.
 
 The model consisted of three scripts: spawner, prey and predator. The spawner was responsible for spawning the initial population. It was also responsible for collecting metrics about the population and recording them. Interesting approach! 
 Full snapshot of the balanced simulation can be downloaded from [here](ecosystem_stable_snapshot.yaml).
@@ -391,7 +407,7 @@ Balanced energy dynamics
 ![Collapsed Ecosystem](simulation_collapsed.png "Collapsed Ecosystem")
 ![Stable Ecosystem](simulation_stable.png "Stable Ecosystem")
 
-My conclusion is that the simulation was successful in demonstrating the ability of LLMs to design and run agent-based simulations. Some inefficiencies in the model can be addressed by adding lua functions. I might need to reconsider the way how the simulation is stored so that LLMs can work on it more efficiently. For example, split the configurations and scripts into separate files.
+My conclusion is that the simulation was successful example of the ability of LLMs to design and run agent-based simulations. Some inefficiencies in the model can be addressed by adding Lua functions. I might need to reconsider the way how the simulation is stored so that LLMs can work on it more efficiently. For example, split the configurations and scripts into separate files. Overall, not bad for such a simple prompt!
 
 ## Where to go from here?
 This project's scope is beyond of what I can implement right now. I could go on indefinitely adding features. At this stage, it is more or less usable, but there are many things that could be improved.
@@ -399,7 +415,8 @@ This project's scope is beyond of what I can implement right now. I could go on 
 Here are some ideas for future improvements:
 - Better observability
 - CLI tool for advancing the simulation without using MCP
+- Adding Skill.md for agents to design better simulations
 - Resources (representing various consumables in the simulation)
 - Spatial environments (2D/3D grids)
 
-Right now it can be found on GitHub [https://github.com/MartinKuzma/vivarium](https://github.com/MartinKuzma/vivarium) and is open source under MIT license. Feel free to contribute or use it for your own projects!
+Right now it can be found on GitHub [https://github.com/MartinKuzma/vivarium](https://github.com/MartinKuzma/vivarium) and is open source under the MIT license. Feel free to contribute or reach out to me.

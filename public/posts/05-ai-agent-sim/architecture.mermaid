@@ -1,0 +1,12 @@
+graph LR
+    MCP["MCP Server"]
+    MCP -->Registry["Registry<br/>create/delete/list worlds"]
+    Registry -->World["World"]
+    World -->Entities["Entity"]
+    World -->MessageBus["Message Bus"]
+    World -->Metrics["Metrics"]
+    Entities -->LuaCtrl["Script Controller"]
+
+    LuaCtrl-->MessageBus
+    LuaCtrl-->Metrics
+    LuaCtrl-->World

@@ -3,3 +3,48 @@ img {
     max-width: 75%;
     margin: auto;
 }
+
+.hero-img {
+    width: 100%;
+    max-width: none;
+    margin-bottom: 15px;
+    max-height: 300px;
+    object-fit: cover;
+}
+
+
+tr {
+    line-height: normal;
+}
+
+td {
+    border-width: thin;
+    border-style: dotted;
+    line-height: normal;
+}
+
+table {
+    border-width: thin;
+    border-style: dotted;
+    width: 100%;
+}
+
+body.colorscheme-dark table td, body.colorscheme-dark table th {
+    border: 1px solid #dadada;
+    border-left-width: 1px;
+    border-left-style: dotted;
+    border-style: dotted;
+    border-left-color: rgb(218, 218, 218);
+}
+
+table td, table th {
+  border: 1px solid #000;
+    border-left-width: 1px;
+    border-left-style: dotted;
+    border-style: dotted;
+    border-left-color: rgb(0, 0, 0);
+}
+
+.container {
+    max-width: 100rem;
+}

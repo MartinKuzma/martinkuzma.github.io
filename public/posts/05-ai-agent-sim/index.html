@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  Agent Simulation Framework for LLMs · Martin&#39;s inner Cosmos
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Martin Kuzma">
+<meta name="description" content="This article was not written by an AI. I only use AI to help me with grammar, spelling, and featured image.
+
+  TL;DR
+  
+    
+    Link to heading
+  
+
+I built a scriptable framework for LLMs to create and run agent based simulations to reason about complex systems and emergent behaviour. Skip to It&rsquo;s simulation time! to see example of a LLM using the framework.
+Project is open source and available on https://github.com/MartinKuzma/vivarium">
+<meta name="keywords" content="">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/posts/05-ai-agent-sim/featured_img.png">
+  <meta name="twitter:title" content="Agent Simulation Framework for LLMs">
+  <meta name="twitter:description" content="This article was not written by an AI. I only use AI to help me with grammar, spelling, and featured image.
+TL;DR Link to heading I built a scriptable framework for LLMs to create and run agent based simulations to reason about complex systems and emergent behaviour. Skip to It’s simulation time! to see example of a LLM using the framework.
+Project is open source and available on https://github.com/MartinKuzma/vivarium">
+
+<meta property="og:url" content="http://localhost:1313/posts/05-ai-agent-sim/">
+  <meta property="og:site_name" content="Martin&#39;s inner Cosmos">
+  <meta property="og:title" content="Agent Simulation Framework for LLMs">
+  <meta property="og:description" content="This article was not written by an AI. I only use AI to help me with grammar, spelling, and featured image.
+TL;DR Link to heading I built a scriptable framework for LLMs to create and run agent based simulations to reason about complex systems and emergent behaviour. Skip to It’s simulation time! to see example of a LLM using the framework.
+Project is open source and available on https://github.com/MartinKuzma/vivarium">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-12-24T22:09:06+02:00">
+    <meta property="article:modified_time" content="2025-12-24T22:09:06+02:00">
+    <meta property="og:image" content="http://localhost:1313/posts/05-ai-agent-sim/featured_img.png">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/05-ai-agent-sim/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+  
+    
+    <link rel="stylesheet" href="/css/custom.css" media="screen">
+  
+
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      Martin&#39;s inner Cosmos
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+         
+          <img class="hero-img" src="/posts/05-ai-agent-sim/featured_img.png" alt="Featured image"/>
+        
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/05-ai-agent-sim/">
+              Agent Simulation Framework for LLMs
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-12-24T22:09:06&#43;02:00">
+                December 24, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              13-minute read
+            </span>
+          </div>
+          
+          
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        <p><em>This article was not written by an AI. I only use AI to help me with grammar, spelling, and featured image.</em></p>
+<h2 id="tldr">
+  TL;DR
+  <a class="heading-link" href="#tldr">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>I built a scriptable framework for LLMs to create and run agent based simulations to reason about complex systems and emergent behaviour. Skip to <a href="#its-simulation-time" >It&rsquo;s simulation time!</a> to see example of a LLM using the framework.</p>
+<p>Project is open source and available on <a href="https://github.com/MartinKuzma/vivarium"  class="external-link" target="_blank" rel="noopener">https://github.com/MartinKuzma/vivarium</a></p>
+<h2 id="motivation">
+  Motivation
+  <a class="heading-link" href="#motivation">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>I&rsquo;ve always wanted to dig deeper into <strong>agent based simulations</strong>. Build, simulate and understand how complex behaviours can emerge and to model economic and social systems. Building such simulations is hard so I never got around to it. In my imagination, I always pictured that I can just tell an AI to simulate something for me just like <strong>Tony Stark</strong> did. Wait a minute! We have capable LLMs now! And they can write code and use tools!</p>
+<p>What if the agents are written by LLMs so that they can run and design simulations by themselves? <strong>This would enable LLMs to reason about complex systems by simulating them and observing emerging behaviour.</strong> Want to let your favorite LLM figure out which strategy is the best to solve a problem? Let it come up with the model and experiment with it!</p>
+<p>The main benefits of this approach would be:</p>
+<ul>
+<li>LLMs don&rsquo;t have to write simulation code from scratch (fewer tokens used)</li>
+<li>LLMs can restore and modify simulation state on the fly, enabling dynamic experimentation</li>
+<li>With fully focused on scripts, context windows won&rsquo;t be wasted on mundane simulation code</li>
+</ul>
+<p>Since I&rsquo;m using GitHub Copilot, I can&rsquo;t determine the exact token usage. It is also not clear how to compare it to a scenario where LLMs write the whole simulation code as it would most likely try to create a different kind of simulation.</p>
+<h2 id="rough-architecture">
+  Rough Architecture
+  <a class="heading-link" href="#rough-architecture">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>I need to build a tool framework usable by LLMs so that they can easily create agents, environments, and run simulations.</p>
+<p>What I have in mind is something like this:</p>
+<ul>
+<li>MCP server to run the simulations</li>
+<li>Simulation runtime (Rust) that can start/stop simulations, manage agents and environments</li>
+<li>Scripting language to write agents and environments</li>
+<li>Observability of the simulation state so that LLMs can reason about it</li>
+<li>Discrete simulation steps so that LLMs can control the pace of the simulation</li>
+<li>Entities are decoupled by messages. Messages should be compatible with other scripting languages in the future.</li>
+</ul>
+<p>For simulation itself I was planning to use a simple system in which agents can send each other messages and interact with the environment. However, I couldn&rsquo;t bear the thought of doing something so basic, so I decided to complicate my life by adding <strong>Entity Component System</strong> (ECS) architecture to the mix.</p>
+<p>I didn&rsquo;t want to use any existing ECS libraries - I wanna learn! As it turns out, making a performant ECS system in Rust is quite painful. I wasn&rsquo;t satisfied but it was somewhat working, however I realized that I was trying to solve a different problem. ECS is great for games where you can leverage data locality, but in my case I only need to manage scripts and expose some API to them. Back to square one.</p>
+<p>I ended up making a simple entity system where each entity has a script controller that runs the script. Entities can send messages to each other via message bus and issue commands to mutate the world state.</p>
+<div class="mermaid">
+graph LR
+    MCP["MCP Server"]
+    MCP -->Registry["Registry<br/>create/delete/list worlds"]
+    Registry -->World["World"]
+    World -->Entities["Entity"]
+    World -->MessageBus["Message Bus"]
+    World -->Metrics["Metrics"]
+    Entities -->LuaCtrl["Script Controller"]
+
+    LuaCtrl-->MessageBus
+    LuaCtrl-->Metrics
+    LuaCtrl-->World
+
+</div>
+
+<table>
+  <thead>
+      <tr>
+          <th>Component</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>MCP Server</td>
+          <td>Exposes tools for LLM to use</td>
+      </tr>
+      <tr>
+          <td>Registry</td>
+          <td>Manages multiple simulation instances</td>
+      </tr>
+      <tr>
+          <td>World</td>
+          <td>Represents a single simulation instance</td>
+      </tr>
+      <tr>
+          <td>Entity</td>
+          <td>Represents an agent or environment in the simulation</td>
+      </tr>
+      <tr>
+          <td>Message Bus</td>
+          <td>Schedules and delivers messages between entities</td>
+      </tr>
+      <tr>
+          <td>Script Controller</td>
+          <td>Runs script representing behavior</td>
+      </tr>
+      <tr>
+          <td>Metrics</td>
+          <td>Collects and exposes simulation metrics</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="scripting-language">
+  Scripting Language
+  <a class="heading-link" href="#scripting-language">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>To enable LLMs to write agents and environments, I need a scripting language that is easy to use and understand. I wanted to use isolated environments so that agents can run independently without interfering with each other. The usual suspects for this are:</p>
+<ul>
+<li>Python</li>
+<li>JavaScript</li>
+<li>Lua</li>
+</ul>
+<p>Tough choice. So I asked an anonymous LLM which one it would prefer. The answer was Lua, for its simplicity and performance. So Lua it is!</p>
+<p>I used mlua as the Lua interpreter. Each entity has its own Lua VM instance. The script can call predefined API functions to interact with the world:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Function</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>world.list_entities()</td>
+          <td>Returns a table of all entity IDs in the simulation</td>
+      </tr>
+      <tr>
+          <td>world.record_metric(name, value)</td>
+          <td>Record a custom metric value for analysis</td>
+      </tr>
+      <tr>
+          <td>self.id</td>
+          <td>The unique ID of the current entity</td>
+      </tr>
+      <tr>
+          <td>self.send_msg(receiver_id, kind, content, delay)</td>
+          <td>Send a message to another entity with an optional delay (in simulation steps)</td>
+      </tr>
+      <tr>
+          <td>self.destroy(entity_id)</td>
+          <td>Destroy an entity by its ID</td>
+      </tr>
+      <tr>
+          <td>self.spawn_entity(entity_id, script_id, initial_state)</td>
+          <td>Spawn a new entity with the given Lua script and initial state</td>
+      </tr>
+  </tbody>
+</table>
+<p>Example Lua script:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-lua" data-lang="lua"><span style="display:flex;"><span>health <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>y <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">update</span>(current_time, msgs)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">-- Process incoming messages</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> _, msg <span style="color:#66d9ef">in</span> ipairs(msgs) <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">-- Handle message.kind and message.content</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">-- Send messages to other entities</span>
+</span></span><span style="display:flex;"><span>    self.send_msg(target_id, msg_type, {field <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;value&#34;</span>})
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">get_state</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">-- Return entity state as Lua table</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {health <span style="color:#f92672">=</span> health, position <span style="color:#f92672">=</span> {x <span style="color:#f92672">=</span> x, y <span style="color:#f92672">=</span> y}}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">set_state</span>(state)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">-- Restore entity state from Lua table</span>
+</span></span><span style="display:flex;"><span>    health <span style="color:#f92672">=</span> state.health
+</span></span><span style="display:flex;"><span>    x <span style="color:#f92672">=</span> state.position.x
+</span></span><span style="display:flex;"><span>    y <span style="color:#f92672">=</span> state.position.y
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span></code></pre></div><h2 id="main-simulation-loop">
+  Main simulation loop
+  <a class="heading-link" href="#main-simulation-loop">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>I kept it simple and straightforward. Each tick represents a simulation step. Each step, any deliverable messages (meaning messages that were scheduled for delivery at the current simulation time) are delivered. I used command pattern to represent actions retrieved from agents. That way entities are not performing any mutations directly, but rather by issuing commands.</p>
+<p>The loop (at the moment of writing) looks something like this:</p>
+<pre tabindex="0"><code>1. Update simulation time
+2. Deliver scheduled messages for the current time
+3. For each entity:
+   - Call update method with current simulation time
+   - Collect commands issued by the entity
+4. Process all collected commands
+</code></pre><p>Nothing too fancy. Parallelization is not my concern at the moment, but it can be added later. The current simulation loop allows for parallel execution of entities.</p>
+<h2 id="enabling-multiple-scripting-languages">
+  Enabling multiple scripting languages
+  <a class="heading-link" href="#enabling-multiple-scripting-languages">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>To make the scripting language swappable, I had to define messages and states in a language agnostic way. I used serde&rsquo;s Value type to represent states and messages. This way, it is scripting runtime&rsquo;s responsibility to transform the data into the Value type and back. The Value basically represents JSON data, allowing me to directly use it in MCP tools and persistence without changing a thing.</p>
+<h2 id="mcp-server">
+  MCP Server
+  <a class="heading-link" href="#mcp-server">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>For those who don&rsquo;t know, MCP (Model Context Protocol) is a protocol for LLMs to interact with external tools. It is all the rage nowadays. Or at least was few months ago.</p>
+<h3 id="tools">
+  Tools
+  <a class="heading-link" href="#tools">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>I wanted to give LLMs everything they need to properly manage simulations. I even added snapshotting so that LLMs can save and restore simulation states.</p>
+<table>
+  <thead>
+      <tr>
+          <th>Name</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>create_world</td>
+          <td>Create a new simulation world with the specified configuration</td>
+      </tr>
+      <tr>
+          <td>delete_world</td>
+          <td>Delete an existing simulation world by name</td>
+      </tr>
+      <tr>
+          <td>copy_world</td>
+          <td>Copy an existing simulation world to a new world with the specified name</td>
+      </tr>
+      <tr>
+          <td>list_worlds</td>
+          <td>List all existing simulation worlds</td>
+      </tr>
+      <tr>
+          <td>list_entities</td>
+          <td>List all entities currently in the simulation. Returns their IDs which can be used as targets for sending messages.</td>
+      </tr>
+      <tr>
+          <td>advance_simulation</td>
+          <td>Advance the simulation by running multiple time steps. Each step processes pending messages and executes entity update() functions.</td>
+      </tr>
+      <tr>
+          <td>get_world_state</td>
+          <td>Get the overall state of the simulation world, including simulation time, entity count, and pending message count.</td>
+      </tr>
+      <tr>
+          <td>set_entity_state</td>
+          <td>Set the state of a specific entity by its ID. The state must be a JSON object compatible with the entity&rsquo;s Lua script.</td>
+      </tr>
+      <tr>
+          <td>get_entity_state</td>
+          <td>Get the current state of a specific entity by its ID.</td>
+      </tr>
+      <tr>
+          <td>list_metrics</td>
+          <td>List the names of all available metrics in the simulation world.</td>
+      </tr>
+      <tr>
+          <td>get_metric</td>
+          <td>Get the current values of a specific metric by name.</td>
+      </tr>
+      <tr>
+          <td>get_metrics</td>
+          <td>Get the current values of multiple metrics by their names.</td>
+      </tr>
+      <tr>
+          <td>create_world_snapshot</td>
+          <td>Create a snapshot of the current state of the simulation world, including entity states and pending messages.</td>
+      </tr>
+      <tr>
+          <td>restore_world_snapshot</td>
+          <td>Restore a simulation world to a previously created snapshot state.</td>
+      </tr>
+      <tr>
+          <td>save_world_snapshot_to_file</td>
+          <td>Save a simulation world snapshot to a YAML file.</td>
+      </tr>
+      <tr>
+          <td>load_world_snapshot_from_file</td>
+          <td>Load a simulation world snapshot from a YAML file.</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="its-simulation-time">
+  It&rsquo;s simulation time!
+  <a class="heading-link" href="#its-simulation-time">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>With MCP server and simulation runtime ready, it&rsquo;s time to let LLMs reason!</p>
+<h3 id="example-predator-prey-model">
+  Example: Predator-Prey Model
+  <a class="heading-link" href="#example-predator-prey-model">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>I used <strong>Claude Sonnet 4.5</strong> for this experiment which I prompted from VSCode using <strong>GitHub Copilot</strong>.</p>
+<p>The prompt was following:</p>
+<p><em>Create a simulation of a simple ecosystem with predators and prey. Determine at which rate the predator population stabilizes given an initial population of 50 predators and 200 prey. After finalizing the simulation, save a snapshots of the worlds to local files. #vivarium</em></p>
+<h4 id="result">
+  Result
+  <a class="heading-link" href="#result">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<p>At first, it tried to create a simple predator-prey model. However, advancing the simulation failed due to incorrect parameters. It was able to fix the issue by searching for the correct parameters in the source code. I discovered that the instructions were not up to date. Mea culpa. The experiment was still running regardless. It created a new simulation model that collapsed after 50 steps due to overhunting. Then it tried to fix the model by adjusting the parameters and adding a carrying capacity for the prey population. This part felt like <strong>cheating</strong>, but end goal is to verify the whole concept of LLMs designing and running simulations, so I will let it slide this time.</p>
+<p>The model consisted of three scripts: spawner, prey and predator. The spawner was responsible for spawning the initial population. It was also responsible for collecting metrics about the population and recording them. Interesting approach!
+Full snapshot of the balanced simulation can be downloaded from <a href="ecosystem_stable_snapshot.yaml" >here</a>.</p>
+<details>
+  <summary>Spawner Script</summary>
+  <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-lua" data-lang="lua"><span style="display:flex;"><span>spawned <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">update</span>(current_time, msgs)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> spawned <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">200</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">local</span> prey_id <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;prey_&#34;</span> <span style="color:#f92672">..</span> i
+</span></span><span style="display:flex;"><span>            self.spawn_entity(prey_id, <span style="color:#e6db74">&#34;prey_script&#34;</span>, {energy <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>, age <span style="color:#f92672">=</span> math.random(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">35</span>), reproduction_cooldown <span style="color:#f92672">=</span> math.random(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">18</span>), next_offspring_id <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>})
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">50</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">local</span> pred_id <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;predator_&#34;</span> <span style="color:#f92672">..</span> i
+</span></span><span style="display:flex;"><span>            self.spawn_entity(pred_id, <span style="color:#e6db74">&#34;predator_script&#34;</span>, {energy <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>, age <span style="color:#f92672">=</span> math.random(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">40</span>), reproduction_cooldown <span style="color:#f92672">=</span> math.random(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">40</span>), hunt_cooldown <span style="color:#f92672">=</span> math.random(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">8</span>), next_offspring_id <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>})
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        spawned <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">local</span> all_entities <span style="color:#f92672">=</span> world.list_entities()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">local</span> prey_count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">local</span> predator_count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> _, entity_id <span style="color:#66d9ef">in</span> ipairs(all_entities) <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> entity_id:sub(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">4</span>) <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;prey&#34;</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>            prey_count <span style="color:#f92672">=</span> prey_count <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elseif</span> entity_id:sub(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">8</span>) <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;predator&#34;</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>            predator_count <span style="color:#f92672">=</span> predator_count <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    world.record_metric(<span style="color:#e6db74">&#34;prey_population&#34;</span>, prey_count)
+</span></span><span style="display:flex;"><span>    world.record_metric(<span style="color:#e6db74">&#34;predator_population&#34;</span>, predator_count)
+</span></span><span style="display:flex;"><span>    world.record_metric(<span style="color:#e6db74">&#34;total_population&#34;</span>, prey_count <span style="color:#f92672">+</span> predator_count)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> prey_count <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        world.record_metric(<span style="color:#e6db74">&#34;predator_prey_ratio&#34;</span>, predator_count <span style="color:#f92672">/</span> prey_count)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">get_state</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {spawned <span style="color:#f92672">=</span> spawned}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">set_state</span>(state)
+</span></span><span style="display:flex;"><span>    spawned <span style="color:#f92672">=</span> state.spawned
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span></code></pre></div>
+</details>
+<details>
+  <summary>Prey Script</summary>
+  <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-lua" data-lang="lua"><span style="display:flex;"><span>energy <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>age <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>reproduction_cooldown <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>next_offspring_id <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>MAX_PREY <span style="color:#f92672">=</span> <span style="color:#ae81ff">300</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">update</span>(current_time, msgs)
+</span></span><span style="display:flex;"><span>    age <span style="color:#f92672">=</span> age <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">local</span> eaten <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> _, msg <span style="color:#66d9ef">in</span> ipairs(msgs) <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> msg.kind <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;hunt&#34;</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>            eaten <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> eaten <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        self.destroy(self.id)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    energy <span style="color:#f92672">=</span> energy <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> energy <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">150</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        energy <span style="color:#f92672">=</span> <span style="color:#ae81ff">150</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> age <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">110</span> <span style="color:#f92672">or</span> energy <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        self.destroy(self.id)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> reproduction_cooldown <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        reproduction_cooldown <span style="color:#f92672">=</span> reproduction_cooldown <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">-- Check prey population before reproducing</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> energy <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">95</span> <span style="color:#f92672">and</span> age <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">9</span> <span style="color:#f92672">and</span> reproduction_cooldown <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">local</span> all_entities <span style="color:#f92672">=</span> world.list_entities()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">local</span> prey_count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> _, entity_id <span style="color:#66d9ef">in</span> ipairs(all_entities) <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> entity_id:sub(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">4</span>) <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;prey&#34;</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>                prey_count <span style="color:#f92672">=</span> prey_count <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> prey_count <span style="color:#f92672">&lt;</span> MAX_PREY <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">local</span> offspring_id <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;prey_&#34;</span> <span style="color:#f92672">..</span> self.id <span style="color:#f92672">..</span> <span style="color:#e6db74">&#34;_&#34;</span> <span style="color:#f92672">..</span> next_offspring_id
+</span></span><span style="display:flex;"><span>            next_offspring_id <span style="color:#f92672">=</span> next_offspring_id <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>            energy <span style="color:#f92672">=</span> energy <span style="color:#f92672">-</span> <span style="color:#ae81ff">38</span>
+</span></span><span style="display:flex;"><span>            reproduction_cooldown <span style="color:#f92672">=</span> <span style="color:#ae81ff">18</span>
+</span></span><span style="display:flex;"><span>            self.spawn_entity(offspring_id, <span style="color:#e6db74">&#34;prey_script&#34;</span>, {energy <span style="color:#f92672">=</span> <span style="color:#ae81ff">75</span>, age <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, reproduction_cooldown <span style="color:#f92672">=</span> <span style="color:#ae81ff">9</span>, next_offspring_id <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>})
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">get_state</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {energy <span style="color:#f92672">=</span> energy, age <span style="color:#f92672">=</span> age, reproduction_cooldown <span style="color:#f92672">=</span> reproduction_cooldown, next_offspring_id <span style="color:#f92672">=</span> next_offspring_id}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">set_state</span>(state)
+</span></span><span style="display:flex;"><span>    energy <span style="color:#f92672">=</span> state.energy
+</span></span><span style="display:flex;"><span>    age <span style="color:#f92672">=</span> state.age
+</span></span><span style="display:flex;"><span>    reproduction_cooldown <span style="color:#f92672">=</span> state.reproduction_cooldown
+</span></span><span style="display:flex;"><span>    next_offspring_id <span style="color:#f92672">=</span> state.next_offspring_id <span style="color:#f92672">or</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span></code></pre></div>
+</details>
+<details>
+  <summary>Predator Script</summary>
+  <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-lua" data-lang="lua"><span style="display:flex;"><span>energy <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>age <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>reproduction_cooldown <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>hunt_cooldown <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>next_offspring_id <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>MAX_PREDATORS <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">update</span>(current_time, msgs)
+</span></span><span style="display:flex;"><span>    age <span style="color:#f92672">=</span> age <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    energy <span style="color:#f92672">=</span> energy <span style="color:#f92672">-</span> <span style="color:#ae81ff">2.5</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> age <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">180</span> <span style="color:#f92672">or</span> energy <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        self.destroy(self.id)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> hunt_cooldown <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        hunt_cooldown <span style="color:#f92672">=</span> hunt_cooldown <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> hunt_cooldown <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> energy <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">110</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">local</span> all_entities <span style="color:#f92672">=</span> world.list_entities()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">local</span> prey_list <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> _, entity_id <span style="color:#66d9ef">in</span> ipairs(all_entities) <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> entity_id:sub(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">4</span>) <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;prey&#34;</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>                table.insert(prey_list, entity_id)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">#</span>prey_list <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> math.random() <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0.6</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">local</span> target <span style="color:#f92672">=</span> prey_list[math.random(<span style="color:#f92672">#</span>prey_list)]
+</span></span><span style="display:flex;"><span>            self.send_msg(target, <span style="color:#e6db74">&#34;hunt&#34;</span>, {hunter <span style="color:#f92672">=</span> self.id}, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>            energy <span style="color:#f92672">=</span> energy <span style="color:#f92672">+</span> <span style="color:#ae81ff">35</span>
+</span></span><span style="display:flex;"><span>            hunt_cooldown <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> reproduction_cooldown <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        reproduction_cooldown <span style="color:#f92672">=</span> reproduction_cooldown <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">-- Check predator population before reproducing</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> energy <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">135</span> <span style="color:#f92672">and</span> age <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">20</span> <span style="color:#f92672">and</span> reproduction_cooldown <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">local</span> all_entities <span style="color:#f92672">=</span> world.list_entities()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">local</span> predator_count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> _, entity_id <span style="color:#66d9ef">in</span> ipairs(all_entities) <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> entity_id:sub(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">8</span>) <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;predator&#34;</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>                predator_count <span style="color:#f92672">=</span> predator_count <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> predator_count <span style="color:#f92672">&lt;</span> MAX_PREDATORS <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">local</span> offspring_id <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;predator_&#34;</span> <span style="color:#f92672">..</span> self.id <span style="color:#f92672">..</span> <span style="color:#e6db74">&#34;_&#34;</span> <span style="color:#f92672">..</span> next_offspring_id
+</span></span><span style="display:flex;"><span>            next_offspring_id <span style="color:#f92672">=</span> next_offspring_id <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>            energy <span style="color:#f92672">=</span> energy <span style="color:#f92672">-</span> <span style="color:#ae81ff">65</span>
+</span></span><span style="display:flex;"><span>            reproduction_cooldown <span style="color:#f92672">=</span> <span style="color:#ae81ff">40</span>
+</span></span><span style="display:flex;"><span>            self.spawn_entity(offspring_id, <span style="color:#e6db74">&#34;predator_script&#34;</span>, {energy <span style="color:#f92672">=</span> <span style="color:#ae81ff">85</span>, age <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, reproduction_cooldown <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>, hunt_cooldown <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span>, next_offspring_id <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>})
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">get_state</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {energy <span style="color:#f92672">=</span> energy, age <span style="color:#f92672">=</span> age, reproduction_cooldown <span style="color:#f92672">=</span> reproduction_cooldown, hunt_cooldown <span style="color:#f92672">=</span> hunt_cooldown, next_offspring_id <span style="color:#f92672">=</span> next_offspring_id}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">set_state</span>(state)
+</span></span><span style="display:flex;"><span>    energy <span style="color:#f92672">=</span> state.energy
+</span></span><span style="display:flex;"><span>    age <span style="color:#f92672">=</span> state.age
+</span></span><span style="display:flex;"><span>    reproduction_cooldown <span style="color:#f92672">=</span> state.reproduction_cooldown
+</span></span><span style="display:flex;"><span>    hunt_cooldown <span style="color:#f92672">=</span> state.hunt_cooldown
+</span></span><span style="display:flex;"><span>    next_offspring_id <span style="color:#f92672">=</span> state.next_offspring_id <span style="color:#f92672">or</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span></code></pre></div>
+</details>
+<p>This is how it interpreted the results:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>Simulation Complete!
+</span></span><span style="display:flex;"><span>Answer: The predator population stabilizes at approximately 100 individuals (range: 87-109 with natural oscillations).
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Key Results:
+</span></span><span style="display:flex;"><span>Balanced Ecosystem (ecosystem_stable):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>✅ Achieved stable equilibrium at ~100 predators
+</span></span><span style="display:flex;"><span>Steps 301-325: Perfect stability at exactly 100 (carrying capacity)
+</span></span><span style="display:flex;"><span>Steps 326-400: Stable oscillations 87-109 (mean ~100)
+</span></span><span style="display:flex;"><span>Prey population: ~430-510 individuals
+</span></span><span style="display:flex;"><span>Predator:Prey ratio: ~1:4 to 1:5
+</span></span><span style="display:flex;"><span>Collapsed Ecosystem (ecosystem_model):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>❌ Complete extinction by step 107
+</span></span><span style="display:flex;"><span>Prey extinct at step 54 (overhunting)
+</span></span><span style="display:flex;"><span>Predators peaked at 205, then starved
+</span></span><span style="display:flex;"><span>Too aggressive hunting/reproduction parameters
+</span></span><span style="display:flex;"><span>Snapshots Saved:
+</span></span><span style="display:flex;"><span>ecosystem_stable_snapshot.yaml (165 KB) - Stable system at step 400
+</span></span><span style="display:flex;"><span>ecosystem_collapsed_snapshot.yaml (17 KB) - Failed system (extinct)
+</span></span><span style="display:flex;"><span>ECOSYSTEM_SIMULATION_RESULTS.md - Detailed analysis
+</span></span><span style="display:flex;"><span>The stable ecosystem achieved equilibrium through:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Carrying capacity constraints (max 100 predators, 300 prey)
+</span></span><span style="display:flex;"><span>60% hunt success rate (vs 100% in failed model)
+</span></span><span style="display:flex;"><span>Longer reproduction cooldowns (40 vs 30 steps)
+</span></span><span style="display:flex;"><span>Balanced energy dynamics
+</span></span></code></pre></div><p><img src="/posts/05-ai-agent-sim/simulation_collapsed.png" alt="Collapsed Ecosystem" title="Collapsed Ecosystem">
+<img src="/posts/05-ai-agent-sim/simulation_stable.png" alt="Stable Ecosystem" title="Stable Ecosystem"></p>
+<p>My conclusion is that the simulation was successful example of the ability of LLMs to design and run agent-based simulations. Some inefficiencies in the model can be addressed by adding Lua functions. I might need to reconsider the way how the simulation is stored so that LLMs can work on it more efficiently. For example, split the configurations and scripts into separate files. Overall, not bad for such a simple prompt!</p>
+<h2 id="where-to-go-from-here">
+  Where to go from here?
+  <a class="heading-link" href="#where-to-go-from-here">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>This project&rsquo;s scope is beyond of what I can implement right now. I could go on indefinitely adding features. At this stage, it is more or less usable, but there are many things that could be improved.</p>
+<p>Here are some ideas for future improvements:</p>
+<ul>
+<li>Better observability</li>
+<li>CLI tool for advancing the simulation without using MCP</li>
+<li>Adding Skill.md for agents to design better simulations</li>
+<li>Resources (representing various consumables in the simulation)</li>
+<li>Spatial environments (2D/3D grids)</li>
+</ul>
+<p>Right now it can be found on GitHub <a href="https://github.com/MartinKuzma/vivarium"  class="external-link" target="_blank" rel="noopener">https://github.com/MartinKuzma/vivarium</a> and is open source under the MIT license. Feel free to contribute or reach out to me.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2025 -
+    
+    2026
+     Martin Kuzma 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@9.3.0/dist/mermaid.min.js"
+    integrity="sha256-QdTG1YTLLTwD3b95jLqFxpQX9uYuJMNAtVZgwKX4oYU=" crossorigin="anonymous"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true });
+  </script>
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+  
+  
+  <script src="/js/3davatar.min.js"></script>
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+</html>
