@@ -1,12 +1,12 @@
 +++
 date = '2025-12-24T22:09:06+02:00'
 draft = true
-title = 'Agent Simulation Framework for LLMs'
+title = 'Letting LLMs Simulate Complex Systems with MCP'
 [params]
     featuredImage = "posts/05-ai-agent-sim/featured_img.png"
 +++
 
-_This article was not written by an AI. I only use AI to help me with grammar, spelling, and featured image._
+<!-- _I wrote this article myself. I only use AI to help me with grammar, spelling, and featured image._ -->
 
 ## TL;DR
 I built a scriptable framework for LLMs to create and run agent based simulations to reason about complex systems and emergent behaviour. Skip to [It's simulation time!](#its-simulation-time) to see example of a LLM using the framework.
@@ -50,11 +50,8 @@ graph LR
     World -->Entities["Entity"]
     World -->MessageBus["Message Bus"]
     World -->Metrics["Metrics"]
-    Entities -->LuaCtrl["Script Controller"]
-
-    LuaCtrl-->MessageBus
-    LuaCtrl-->Metrics
-    LuaCtrl-->World
+    Entities -->LuaCtrl["Script Controller (LUA)"]    
+    LuaCtrl-->|Commands and Queries|World
 {{</mermaid>}}
 
 | Component       | Description                                                  |

@@ -48,3 +48,7 @@ table td, table th {
 .container {
     max-width: 100rem;
 }
+
+.title-link {
+    font-size: 3.8rem;
+}
