@@ -6,10 +6,8 @@ title = 'Agent Simulation Framework for LLMs'
     featuredImage = "posts/05-ai-agent-sim/featured_img.png"
 +++
 
-_This article was not written by an AI. I only use AI to help me with grammar, spelling, and featured image._
-
 ## TL;DR
-I built a scriptable framework for LLMs to create and run agent based simulations to reason about complex systems and emergent behaviour. Skip to [It's simulation time!](#its-simulation-time) to see example of a LLM using the framework.
+I built an MCP-driven simulation runtime that LLMs can use to iteratively design, run, snapshot and modify agent-based models. Skip to [It's simulation time!](#its-simulation-time) to see example of a LLM using the framework.
 
 Project is open source and available on [https://github.com/MartinKuzma/vivarium](https://github.com/MartinKuzma/vivarium)
 
@@ -131,7 +129,7 @@ Nothing too fancy. Parallelization is not my concern at the moment, but it can b
 To make the scripting language swappable, I had to define messages and states in a language agnostic way. I used serde's Value type to represent states and messages. This way, it is scripting runtime's responsibility to transform the data into the Value type and back. The Value basically represents JSON data, allowing me to directly use it in MCP tools and persistence without changing a thing.
 
 ## MCP Server
-For those who don't know, MCP (Model Context Protocol) is a protocol for LLMs to interact with external tools. It is all the rage nowadays. Or at least was few months ago.
+For those who don't know, MCP (Model Context Protocol) is a protocol for LLMs to interact with external tools. I choose to implement it as locally running server with stdin/stdout communication.
 
 ### Tools
 I wanted to give LLMs everything they need to properly manage simulations. I even added snapshotting so that LLMs can save and restore simulation states.
@@ -407,7 +405,12 @@ Balanced energy dynamics
 ![Collapsed Ecosystem](simulation_collapsed.png "Collapsed Ecosystem")
 ![Stable Ecosystem](simulation_stable.png "Stable Ecosystem")
 
-My conclusion is that the simulation was successful example of the ability of LLMs to design and run agent-based simulations. Some inefficiencies in the model can be addressed by adding Lua functions. I might need to reconsider the way how the simulation is stored so that LLMs can work on it more efficiently. For example, split the configurations and scripts into separate files. Overall, not bad for such a simple prompt!
+My conclusion is that the simulation was successful example of the ability of LLMs to design and run agent-based simulations. Some inefficiencies in the model can be addressed by adding Lua functions. For example, instead of listing all entities I can add a function that filters entities by kind.
+
+## What failed
+The original prompt revealed some issues with the runtime. Namely, uncontrolled spawning of entities caused the runtime to run out of memory. I had to cap agent population to 10,000 entities to prevent this from happening.
+
+LLM's approach to fixing the model didn't utilize the tools properly. I might need to reconsider the way how the simulation is stored so that LLMs can work on it more efficiently. For example, split the configurations and scripts into separate files. It would also provide an opportunity for human users to modify the simulations.
 
 ## Where to go from here?
 This project's scope is beyond of what I can implement right now. I could go on indefinitely adding features. At this stage, it is more or less usable, but there are many things that could be improved.
