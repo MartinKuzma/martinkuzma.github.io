@@ -10,4 +10,8 @@ This is my personal blog I use to unleash my creativity whenever I have some spa
 
 What to expect here? I write about pretty much anything technical that fascinates me. Check out the [posts](https://martinkuzma.github.io/posts) for more details.
 
-Feel free to explore my articles and projects. If you wish to get in touch, you can find me on [X/Twitter](https://x.com/MrCosmosMartin) or [GitHub](https://github.com/MartinKuzma).
+Feel free to explore my articles and projects. If you wish to get in touch:
+
+<a href="https://x.com/MrCosmosMartin" aria-label="X" title="X"><i class="fa-brands fa-x-twitter fa-2x" aria-hidden="true"></i></a>
+&nbsp;&nbsp;
+<a href="https://github.com/MartinKuzma" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github fa-2x" aria-hidden="true"></i></a>
