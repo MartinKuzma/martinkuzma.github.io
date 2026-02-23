@@ -48,3 +48,21 @@ table td, table th {
 .container {
     max-width: 100rem;
 }
+
+.about-social-links {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.about-social-links a {
+    color: inherit;
+    display: inline-flex;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.about-social-links a:hover,
+.about-social-links a:focus-visible {
+    transform: translateY(-1px);
+    opacity: 0.8;
+}
