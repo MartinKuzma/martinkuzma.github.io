@@ -6,8 +6,15 @@
     <description>Recent content in Posts on Martin&#39;s inner Cosmos</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 14 Dec 2025 13:00:00 +0200</lastBuildDate>
+    <lastBuildDate>Tue, 24 Feb 2026 09:00:00 +0200</lastBuildDate>
     <atom:link href="https://martinkuzma.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Letting LLMs Simulate Complex Systems with MCP</title>
+      <link>https://martinkuzma.github.io/posts/05-ai-agent-sim/</link>
+      <pubDate>Tue, 24 Feb 2026 09:00:00 +0200</pubDate>
+      <guid>https://martinkuzma.github.io/posts/05-ai-agent-sim/</guid>
+      <description>&lt;h2 id=&#34;tldr&#34;&gt;&#xA;  TL;DR&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#tldr&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;I built an MCP-driven simulation runtime that LLMs can use to iteratively design, run, snapshot and modify agent-based models. Skip to &lt;a href=&#34;#its-simulation-time&#34; &gt;It&amp;rsquo;s simulation time!&lt;/a&gt; to see example of a LLM using the framework.&lt;/p&gt;&#xA;&lt;p&gt;Project is open source and available on &lt;a href=&#34;https://github.com/MartinKuzma/vivarium&#34;  class=&#34;external-link&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;https://github.com/MartinKuzma/vivarium&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;motivation&#34;&gt;&#xA;  Motivation&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#motivation&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;I&amp;rsquo;ve always wanted to dig deeper into &lt;strong&gt;agent based simulations&lt;/strong&gt;. Build, simulate and understand how complex behaviours can emerge and to model economic and social systems. Building such simulations is hard so I never got around to it. In my imagination, I always pictured that I can just tell an AI to simulate something for me just like &lt;strong&gt;Tony Stark&lt;/strong&gt; did. Wait a minute! We have capable LLMs now! And they can write code and use tools!&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Pixel avatar Part 2: Displaying points in 3D</title>
       <link>https://martinkuzma.github.io/posts/03-avatar-part-2/</link>

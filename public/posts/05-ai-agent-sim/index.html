@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <title>
   Letting LLMs Simulate Complex Systems with MCP · Martin&#39;s inner Cosmos
 </title>
@@ -35,13 +35,13 @@ I&rsquo;ve always wanted to dig deeper into agent based simulations. Build, simu
 
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="http://localhost:1313/posts/05-ai-agent-sim/featured_img.png">
+  <meta name="twitter:image" content="https://martinkuzma.github.io/posts/05-ai-agent-sim/featured_img.png">
   <meta name="twitter:title" content="Letting LLMs Simulate Complex Systems with MCP">
   <meta name="twitter:description" content="TL;DR Link to heading I built an MCP-driven simulation runtime that LLMs can use to iteratively design, run, snapshot and modify agent-based models. Skip to It’s simulation time! to see example of a LLM using the framework.
 Project is open source and available on https://github.com/MartinKuzma/vivarium
 Motivation Link to heading I’ve always wanted to dig deeper into agent based simulations. Build, simulate and understand how complex behaviours can emerge and to model economic and social systems. Building such simulations is hard so I never got around to it. In my imagination, I always pictured that I can just tell an AI to simulate something for me just like Tony Stark did. Wait a minute! We have capable LLMs now! And they can write code and use tools!">
 
-<meta property="og:url" content="http://localhost:1313/posts/05-ai-agent-sim/">
+<meta property="og:url" content="https://martinkuzma.github.io/posts/05-ai-agent-sim/">
   <meta property="og:site_name" content="Martin&#39;s inner Cosmos">
   <meta property="og:title" content="Letting LLMs Simulate Complex Systems with MCP">
   <meta property="og:description" content="TL;DR Link to heading I built an MCP-driven simulation runtime that LLMs can use to iteratively design, run, snapshot and modify agent-based models. Skip to It’s simulation time! to see example of a LLM using the framework.
@@ -50,14 +50,14 @@ Motivation Link to heading I’ve always wanted to dig deeper into agent based s
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2025-12-24T22:09:06+02:00">
-    <meta property="article:modified_time" content="2025-12-24T22:09:06+02:00">
-    <meta property="og:image" content="http://localhost:1313/posts/05-ai-agent-sim/featured_img.png">
+    <meta property="article:published_time" content="2026-02-24T09:00:00+02:00">
+    <meta property="article:modified_time" content="2026-02-24T09:00:00+02:00">
+    <meta property="og:image" content="https://martinkuzma.github.io/posts/05-ai-agent-sim/featured_img.png">
 
 
 
 
-<link rel="canonical" href="http://localhost:1313/posts/05-ai-agent-sim/">
+<link rel="canonical" href="https://martinkuzma.github.io/posts/05-ai-agent-sim/">
 
 
 <link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -67,7 +67,7 @@ Motivation Link to heading I’ve always wanted to dig deeper into agent based s
 
   
   
-  <link rel="stylesheet" href="/css/coder.css" media="screen">
+  <link rel="stylesheet" href="/css/coder.min.4b392a85107b91dbdabc528edf014a6ab1a30cd44cafcd5325c8efe796794fca.css" integrity="sha256-SzkqhRB7kdvavFKO3wFKarGjDNRMr81TJcjv55Z5T8o=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -77,7 +77,7 @@ Motivation Link to heading I’ve always wanted to dig deeper into agent based s
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -85,7 +85,7 @@ Motivation Link to heading I’ve always wanted to dig deeper into agent based s
  
   
     
-    <link rel="stylesheet" href="/css/custom.css" media="screen">
+    <link rel="stylesheet" href="/css/custom.min.eb65a8f05f46da75bcc45d76260ab1b4765cd4f76975a4136e65e750d12986e9.css" integrity="sha256-62Wo8F9G2nW8xF12JgqxtHZc1PdpdaQTbmXnUNEphuk=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -130,7 +130,7 @@ Motivation Link to heading I’ve always wanted to dig deeper into agent based s
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="http://localhost:1313/">
+    <a class="navigation-title" href="https://martinkuzma.github.io/">
       Martin&#39;s inner Cosmos
     </a>
     
@@ -168,7 +168,7 @@ Motivation Link to heading I’ve always wanted to dig deeper into agent based s
         
         <div class="post-title">
           <h1 class="title">
-            <a class="title-link" href="http://localhost:1313/posts/05-ai-agent-sim/">
+            <a class="title-link" href="https://martinkuzma.github.io/posts/05-ai-agent-sim/">
               Letting LLMs Simulate Complex Systems with MCP
             </a>
           </h1>
@@ -177,8 +177,8 @@ Motivation Link to heading I’ve always wanted to dig deeper into agent based s
           <div class="date">
             <span class="posted-on">
               <i class="fa-solid fa-calendar" aria-hidden="true"></i>
-              <time datetime="2025-12-24T22:09:06&#43;02:00">
-                December 24, 2025
+              <time datetime="2026-02-24T09:00:00&#43;02:00">
+                February 24, 2026
               </time>
             </span>
             <span class="reading-time">
@@ -811,13 +811,13 @@ Full snapshot of the balanced simulation can be downloaded from <a href="ecosyst
 
   
   
-  <script src="/js/coder.js"></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   
   
   
-  <script src="/js/3davatar.min.js"></script>
+  <script src="/js/3davatar.min.min.2e81f5f9f345b4ca27f94e6663ed9df413fde4ddcd929930098f0a8a76f09365.js" integrity="sha256-LoH1&#43;fNFtMon&#43;U5mY&#43;2d9BP95N3NkpkwCY8Kinbwk2U="></script>
   
   
 
