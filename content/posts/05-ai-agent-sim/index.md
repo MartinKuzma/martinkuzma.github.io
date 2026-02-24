@@ -418,5 +418,7 @@ Here are some ideas for future improvements:
 - Adding Skill.md for agents to design better simulations
 - Resources (representing various consumables in the simulation)
 - Spatial environments (2D/3D grids)
+- Setting seed for reproducibility
+- More function in Lua API (e.g. get nearby entities, filter entities by kind, various random distributions, etc.)
 
 Right now it can be found on GitHub [https://github.com/MartinKuzma/vivarium](https://github.com/MartinKuzma/vivarium) and is open source under the MIT license. Feel free to contribute or reach out to me.
