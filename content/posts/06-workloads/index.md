@@ -26,7 +26,7 @@ All approaches fall into one of two categories: leaderless and leader-based.
 
 **Leader-based** approaches introduce a leader that is responsible for rebalancing workloads among workers. This simplifies the coordination because the leader is aware of the overall state and can make optimized decisions.
 
-## Chosen approach
+## Thus spoketh the leader
 Because of the requirements, I chose the leader-based approach. I didn't want to introduce a new service (RAM consumption and high availability concerns) so I decided to just elect a leader among the existing workers.
 
 Workers have an API with following endpoints: `evict` and `assign` and `state`. Leader is responsibile for calling these endpoints. This flow allows the leader to perform rebalancing at its own pace.
