@@ -58,6 +58,51 @@ sequenceDiagram
     Worker2-->>Leader: OK
 {{</mermaid>}}
 
+This is how the worker gRPC service definition would look like:
+```protobuf
+service Worker {
+    // Returns the current state of the worker.
+    rpc GetState(GetStateRequest) returns (GetStateResponse);
+    // Evicts a workload from the worker.
+    // Idempotent: if the workload is not present, it is considered a success.
+    rpc Evict(EvictRequest) returns (EvictResponse);
+    // Assigns a workload to the worker.
+    // Idempotent: if the workload is already present, it is considered a success.
+    rpc Assign(AssignRequest) returns (AssignResponse);
+}
+
+message GetStateRequest {
+    // Fencing token (more about this later)
+    int64 fencing_token = 1;
+}
+
+message GetStateResponse {
+    repeated Workload workloads = 1;
+}
+
+message Workload {
+    string id = 1;
+    int32 cost = 2;
+    google.protobuf.Timestamp assigned_time = 3;
+
+    // Anything else you deem necessary...
+}
+
+message EvictRequest {
+    string workload_id = 1;
+    int64 fencing_token = 2;
+}
+
+message EvictResponse {}
+
+message AssignRequest {
+    string workload_id = 1;
+    int64 fencing_token = 2;
+}
+
+message AssignResponse {}
+```
+
 ## Stacking bricks
 The leader's role is to coordinate the distribution of workloads among workers. It can calculate the desired state and emit commands to workers to achieve that state. This resembles how Kubernetes controllers operate.
 
