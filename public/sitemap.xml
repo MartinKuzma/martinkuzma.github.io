@@ -2,43 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://martinkuzma.github.io/posts/05-ai-agent-sim/</loc>
+    <loc>http://localhost:1313/posts/06-workloads/</loc>
+    <lastmod>2026-11-07T15:20:00+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2026-11-07T15:20:00+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2026-11-07T15:20:00+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/05-ai-agent-sim/</loc>
     <lastmod>2026-02-24T09:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://martinkuzma.github.io/</loc>
-    <lastmod>2026-02-24T09:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://martinkuzma.github.io/posts/</loc>
-    <lastmod>2026-02-24T09:00:00+02:00</lastmod>
-  </url><url>
-    <loc>https://martinkuzma.github.io/categories/</loc>
+    <loc>http://localhost:1313/categories/</loc>
     <lastmod>2025-12-14T13:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://martinkuzma.github.io/categories/pixel-avatar/</loc>
+    <loc>http://localhost:1313/categories/pixel-avatar/</loc>
     <lastmod>2025-12-14T13:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://martinkuzma.github.io/series/pixel-avatar/</loc>
+    <loc>http://localhost:1313/series/pixel-avatar/</loc>
     <lastmod>2025-12-14T13:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://martinkuzma.github.io/posts/03-avatar-part-2/</loc>
+    <loc>http://localhost:1313/posts/03-avatar-part-2/</loc>
     <lastmod>2025-12-14T13:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://martinkuzma.github.io/series/</loc>
+    <loc>http://localhost:1313/series/</loc>
     <lastmod>2025-12-14T13:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://martinkuzma.github.io/posts/02-avatar-part-1/</loc>
+    <loc>http://localhost:1313/posts/02-avatar-part-1/</loc>
     <lastmod>2025-11-11T16:00:06+02:00</lastmod>
   </url><url>
-    <loc>https://martinkuzma.github.io/posts/01-worst-grpc-api/</loc>
+    <loc>http://localhost:1313/posts/01-worst-grpc-api/</loc>
     <lastmod>2025-10-17T22:09:06+02:00</lastmod>
   </url><url>
-    <loc>https://martinkuzma.github.io/about/</loc>
+    <loc>http://localhost:1313/about/</loc>
     <lastmod>2019-02-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://martinkuzma.github.io/authors/</loc>
+    <loc>http://localhost:1313/authors/</loc>
   </url><url>
-    <loc>https://martinkuzma.github.io/contact/</loc>
+    <loc>http://localhost:1313/contact/</loc>
   </url><url>
-    <loc>https://martinkuzma.github.io/tags/</loc>
+    <loc>http://localhost:1313/tags/</loc>
   </url>
 </urlset>
