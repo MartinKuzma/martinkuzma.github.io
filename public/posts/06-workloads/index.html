@@ -236,7 +236,24 @@ We were trying to collect and process data from customers’ infrastructure in r
 <p>Because of the requirements, I chose the leader-based approach. I didn&rsquo;t want to introduce a new service (RAM consumption and high availability concerns), so I decided to just elect a leader among the existing workers.</p>
 <p>Workers expose an API with the following endpoints: <code>evict</code>, <code>assign</code> and <code>state</code>. The leader is responsible for calling these endpoints. This flow allows the leader to perform rebalancing at its own pace. Both <code>evict</code> and <code>assign</code> must be idempotent.</p>
 <p>In my case, the leader discovers the workers by calling the Kubernetes API and listing all pods with a specific label. The leader can then call the <code>state</code> endpoint of each worker to get the current state of workloads.</p>
-<h2 id="stacking-bricks">
+<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">sequenceDiagram
+    participant Leader
+    participant Worker1
+    participant Worker2
+    participant K8SAPI as K8S API
+
+    Leader-&gt;&gt;K8SAPI: list pods
+    K8SAPI--&gt;&gt;Leader: {Worker1, Worker2}
+    Leader-&gt;&gt;Worker1: state()
+    Worker1--&gt;&gt;Leader: {workload1, workload2}
+    Leader-&gt;&gt;Worker2: state()
+    Worker2--&gt;&gt;Leader: {workload3}
+
+    Leader-&gt;&gt;Worker1: evict(workload1)
+    Worker1--&gt;&gt;Leader: OK
+    Leader-&gt;&gt;Worker2: assign(workload1)
+    Worker2--&gt;&gt;Leader: OK
+</code></pre><h2 id="stacking-bricks">
   Stacking bricks
   <a class="heading-link" href="#stacking-bricks">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
