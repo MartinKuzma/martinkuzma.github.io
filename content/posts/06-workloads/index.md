@@ -6,7 +6,9 @@ title = 'Balancing never-ending workloads'
     featuredImage = "posts/06-workloads/featured_img.jpg"
 +++
 ## The never-ending workloads
-Let me tell you about a challenge I encountered more than a year ago when we started working on a new project. **I promise you: there will be some pictures later on.**
+Let me tell you about a challenge I encountered more than a year ago when we started working on a new project. 
+
+**I promise you: there will be some pictures later on.**
 
 We were trying to collect and process data from customers' infrastructure in real time, all within our **Kubernetes clusters**. Instead of usual solutions where data is scraped by an agent and pushed to some queue, we had to run our "agents" in our own clusters to minimize customer's costs. Constantly tearing down and spinning up new workloads was not an option, so I had to come up with a solution how to handle workloads that must run constantly and indefinitely.
 
