@@ -38,7 +38,7 @@ Workers expose an API with the following endpoints: `evict`, `assign` and `state
 
 In my case, the leader discovers the workers by calling the Kubernetes API and listing all pods with a specific label. The leader can then call the `state` endpoint of each worker to get the current state of workloads.
 
-```mermaid
+{{<mermaid>}}
 sequenceDiagram
     participant Leader
     participant Worker1
@@ -56,7 +56,7 @@ sequenceDiagram
     Worker1-->>Leader: OK
     Leader->>Worker2: assign(workload1)
     Worker2-->>Leader: OK
-```
+{{</mermaid>}}
 
 ## Stacking bricks
 The leader's role is to coordinate the distribution of workloads among workers. It can calculate the desired state and emit commands to workers to achieve that state. This resembles how Kubernetes controllers operate.

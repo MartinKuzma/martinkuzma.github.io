@@ -19,7 +19,7 @@ colorScheme = "auto"
 #gravatar = "kuzma_819@hotmail.com"
 maxSeeAlsoItems = 5
 customCSS=["css/custom.css"]
-customJS=["js/3davatar.min.js"]
+customJS=["js/3davatar.min.js", "js/mermaid-theme.js"]
 
 [taxonomies]
 category = "categories"

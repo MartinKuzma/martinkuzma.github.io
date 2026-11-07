@@ -238,17 +238,17 @@ Motivation Link to heading I’ve always wanted to dig deeper into agent based s
 <p>For simulation itself I was planning to use a simple system in which agents can send each other messages and interact with the environment. However, I couldn&rsquo;t bear the thought of doing something so basic, so I decided to complicate my life by adding <strong>Entity Component System</strong> (ECS) architecture to the mix.</p>
 <p>I didn&rsquo;t want to use any existing ECS libraries - I wanna learn! As it turns out, making a performant ECS system in Rust is quite painful. I wasn&rsquo;t satisfied but it was somewhat working, however I realized that I was trying to solve a different problem. ECS is great for games where you can leverage data locality, but in my case I only need to manage scripts and expose some API to them. Back to square one.</p>
 <p>I ended up making a simple entity system where each entity has a script controller that runs the script. Entities can send messages to each other via message bus and issue commands to mutate the world state.</p>
-<div class="mermaid">
-graph LR
-    MCP["MCP Server"]
-    MCP -->Registry["Registry<br/>create/delete/list worlds"]
-    Registry -->World["World"]
-    World -->Entities["Entity"]
-    World -->MessageBus["Message Bus"]
-    World -->Metrics["Metrics"]
-    Entities -->LuaCtrl["Script Controller (LUA)"]    
-    LuaCtrl-->|Commands and Queries|World
-
+<div class="mermaid-diagram">
+  <pre class="mermaid-source" hidden>graph LR
+    MCP[&#34;MCP Server&#34;]
+    MCP --&gt;Registry[&#34;Registry&lt;br/&gt;create/delete/list worlds&#34;]
+    Registry --&gt;World[&#34;World&#34;]
+    World --&gt;Entities[&#34;Entity&#34;]
+    World --&gt;MessageBus[&#34;Message Bus&#34;]
+    World --&gt;Metrics[&#34;Metrics&#34;]
+    Entities --&gt;LuaCtrl[&#34;Script Controller (LUA)&#34;]    
+    LuaCtrl--&gt;|Commands and Queries|World</pre>
+  <div class="mermaid-output"></div>
 </div>
 
 <table>
@@ -820,6 +820,11 @@ Full snapshot of the balanced simulation can be downloaded from <a href="ecosyst
   
   
   <script src="/js/3davatar.min.min.c914ca0efb3ae7d10e0e0d05f2acf4d0cda9b9914117e1372973981e2e419927.js" integrity="sha256-yRTKDvs659EODg0F8qz00M2puZFBF&#43;E3KXOYHi5BmSc="></script>
+  
+  
+  
+  
+  <script src="/js/mermaid-theme.min.5210248d16572b53673be3a426199036a49ac65ada81f847be38e6bdbc15a697.js" integrity="sha256-UhAkjRZXK1NnO&#43;OkJhmQNqSaxlragfhHvjjmvbwVppc="></script>
   
   
 
