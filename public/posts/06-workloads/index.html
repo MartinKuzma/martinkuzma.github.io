@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <title>
   Balancing never-ending workloads · Martin&#39;s inner Cosmos
 </title>
@@ -27,12 +27,12 @@ We were trying to collect and process data from customers&rsquo; infrastructure 
 
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="http://localhost:1313/posts/06-workloads/featured_img.jpg">
+  <meta name="twitter:image" content="https://martinkuzma.github.io/posts/06-workloads/featured_img.jpg">
   <meta name="twitter:title" content="Balancing never-ending workloads">
   <meta name="twitter:description" content="The never-ending workloads Link to heading Let me tell you about a challenge I encountered more than a year ago when we started working on a new project. I promise you: there will be some pictures later on.
 We were trying to collect and process data from customers’ infrastructure in real time, all within our Kubernetes clusters. Instead of usual solutions where data is scraped by an agent and pushed to some queue, we had to run our “agents” in our own clusters to minimize customer’s costs. Constantly tearing down and spinning up new workloads was not an option, so I had to come up with a solution how to handle workloads that must run constantly and indefinitely.">
 
-<meta property="og:url" content="http://localhost:1313/posts/06-workloads/">
+<meta property="og:url" content="https://martinkuzma.github.io/posts/06-workloads/">
   <meta property="og:site_name" content="Martin&#39;s inner Cosmos">
   <meta property="og:title" content="Balancing never-ending workloads">
   <meta property="og:description" content="The never-ending workloads Link to heading Let me tell you about a challenge I encountered more than a year ago when we started working on a new project. I promise you: there will be some pictures later on.
@@ -42,12 +42,12 @@ We were trying to collect and process data from customers’ infrastructure in r
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2026-11-07T15:20:00+02:00">
     <meta property="article:modified_time" content="2026-11-07T15:20:00+02:00">
-    <meta property="og:image" content="http://localhost:1313/posts/06-workloads/featured_img.jpg">
+    <meta property="og:image" content="https://martinkuzma.github.io/posts/06-workloads/featured_img.jpg">
 
 
 
 
-<link rel="canonical" href="http://localhost:1313/posts/06-workloads/">
+<link rel="canonical" href="https://martinkuzma.github.io/posts/06-workloads/">
 
 
 <link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -57,7 +57,7 @@ We were trying to collect and process data from customers’ infrastructure in r
 
   
   
-  <link rel="stylesheet" href="/css/coder.css" media="screen">
+  <link rel="stylesheet" href="/css/coder.min.4b392a85107b91dbdabc528edf014a6ab1a30cd44cafcd5325c8efe796794fca.css" integrity="sha256-SzkqhRB7kdvavFKO3wFKarGjDNRMr81TJcjv55Z5T8o=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -67,7 +67,7 @@ We were trying to collect and process data from customers’ infrastructure in r
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -75,7 +75,7 @@ We were trying to collect and process data from customers’ infrastructure in r
  
   
     
-    <link rel="stylesheet" href="/css/custom.css" media="screen">
+    <link rel="stylesheet" href="/css/custom.min.eb65a8f05f46da75bcc45d76260ab1b4765cd4f76975a4136e65e750d12986e9.css" integrity="sha256-62Wo8F9G2nW8xF12JgqxtHZc1PdpdaQTbmXnUNEphuk=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -120,7 +120,7 @@ We were trying to collect and process data from customers’ infrastructure in r
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="http://localhost:1313/">
+    <a class="navigation-title" href="https://martinkuzma.github.io/">
       Martin&#39;s inner Cosmos
     </a>
     
@@ -158,7 +158,7 @@ We were trying to collect and process data from customers’ infrastructure in r
         
         <div class="post-title">
           <h1 class="title">
-            <a class="title-link" href="http://localhost:1313/posts/06-workloads/">
+            <a class="title-link" href="https://martinkuzma.github.io/posts/06-workloads/">
               Balancing never-ending workloads
             </a>
           </h1>
@@ -190,7 +190,7 @@ We were trying to collect and process data from customers’ infrastructure in r
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
-<p>Let me tell you about a challenge I encountered more than a year ago when we started working on a new project. I promise you: there will be some pictures later on.</p>
+<p>Let me tell you about a challenge I encountered more than a year ago when we started working on a new project. <strong>I promise you: there will be some pictures later on.</strong></p>
 <p>We were trying to collect and process data from customers&rsquo; infrastructure in real time, all within our <strong>Kubernetes clusters</strong>. Instead of usual solutions where data is scraped by an agent and pushed to some queue, we had to run our &ldquo;agents&rdquo; in our own clusters to minimize customer&rsquo;s costs. Constantly tearing down and spinning up new workloads was not an option, so I had to come up with a solution how to handle workloads that must run constantly and indefinitely.</p>
 <p>What were the requirements?</p>
 <ul>
@@ -202,9 +202,9 @@ We were trying to collect and process data from customers’ infrastructure in r
 <li>Minimal downtime must be ensured (balancing must be as non-disruptive as possible)</li>
 <li>Don&rsquo;t waste memory (multiple workloads on the same worker pod)</li>
 </ul>
-<h2 id="what-should-i-do">
-  What should I do?
-  <a class="heading-link" href="#what-should-i-do">
+<h2 id="what-are-the-options">
+  What are the options?
+  <a class="heading-link" href="#what-are-the-options">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
@@ -405,13 +405,13 @@ We were trying to collect and process data from customers’ infrastructure in r
 
   
   
-  <script src="/js/coder.js"></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   
   
   
-  <script src="/js/3davatar.min.js"></script>
+  <script src="/js/3davatar.min.min.c914ca0efb3ae7d10e0e0d05f2acf4d0cda9b9914117e1372973981e2e419927.js" integrity="sha256-yRTKDvs659EODg0F8qz00M2puZFBF&#43;E3KXOYHi5BmSc="></script>
   
   
 
